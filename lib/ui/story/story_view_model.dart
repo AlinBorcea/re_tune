@@ -1,0 +1,18 @@
+import 'package:isar/isar.dart';
+import 'package:re_tune/domain/models/story/story.dart';
+
+class StoryViewModel {
+  final Isar _isar;
+  final String appDocPath;
+
+  StoryViewModel(this.appDocPath)
+    : _isar = Isar.openSync([StorySchema], directory: appDocPath);
+
+  Future<List<Story>> get stories => _isar.storys.where().findAll();
+
+  void putStory(Story story) {
+    _isar.writeTxn(() async {
+      await _isar.storys.put(story);
+    });
+  }
+}
