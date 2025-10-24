@@ -15,4 +15,10 @@ class StoryViewModel {
       await _isar.storys.put(story);
     });
   }
+
+  void deleteStory(Story story) {
+    _isar.writeTxn(() async {
+      _isar.storys.delete(story.id);
+    });
+  }
 }

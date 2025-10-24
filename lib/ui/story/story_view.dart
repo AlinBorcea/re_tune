@@ -37,15 +37,7 @@ class _StoryViewState extends State<StoryView> {
       body: _initDone
           ? ListView.builder(
               itemCount: _stories.length,
-              itemBuilder: (context, index) => Card(
-                child: ListTile(
-                  leading: Text('Item'),
-                  trailing: TextButton.icon(
-                    onPressed: () {},
-                    label: Icon(Icons.info),
-                  ),
-                ),
-              ),
+              itemBuilder: (context, index) => _storyItem(_stories[index]),
             )
           : Text("Init not done!"),
       floatingActionButton: FloatingActionButton(
@@ -57,6 +49,60 @@ class _StoryViewState extends State<StoryView> {
           );
         },
         child: Icon(Icons.add),
+      ),
+    );
+  }
+
+  Widget _storyItem(Story story) {
+    return Card(
+      child: ExpansionTile(
+        title: Text(story.name ?? 'Nothing'),
+        leading: Icon(Icons.note),
+        children: [
+          ListTile(
+            title: Text(
+              story.description ?? 'Description of the story goes here.',
+            ),
+          ),
+          Card(
+            child: Row(
+              children: [
+                TextButton(
+                  onPressed: () {
+                    debugPrint('Opening story details');
+                  },
+                  child: Text('Details'),
+                ),
+                TextButton(
+                  onPressed: () => _showAlertDialogDeleteStory(story),
+                  child: Text('Delete'),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showAlertDialogDeleteStory(Story story) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Delete story ${story.name}?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'Cancel'),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              _viewModel.deleteStory(story);
+              Navigator.pop(context);
+            },
+            child: const Text('Yes'),
+          ),
+        ],
       ),
     );
   }
