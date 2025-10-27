@@ -25,6 +25,47 @@ class _StoryDetailsState extends State<StoryDetails> {
   final _milestoneValuesController = TextEditingController();
   final _setbackValuesController = TextEditingController();
 
+  late final List<Widget> _progressFormWidgets = [
+    TextFormField(
+      controller: _progressValuesController,
+      decoration: InputDecoration(labelText: 'Progress made'),
+      validator: (value) => value,
+    ),
+    Row(
+      children: [
+        ElevatedButton(onPressed: () {}, child: Text('Add Progress')),
+        ElevatedButton(onPressed: () {}, child: Text('Remove Progress')),
+      ],
+    ),
+  ];
+
+  late final List<Widget> _milestoneFormWidgets = [
+    TextFormField(
+      controller: _milestoneValuesController,
+      decoration: InputDecoration(labelText: 'Milestones'),
+      validator: (value) => value,
+    ),
+    Row(
+      children: [
+        ElevatedButton(onPressed: () {}, child: Text('Add Milestone')),
+        ElevatedButton(onPressed: () {}, child: Text('Remove Milestone')),
+      ],
+    ),
+  ];
+  late final List<Widget> _setbacksFormWidgets = [
+    TextFormField(
+      controller: _setbackValuesController,
+      decoration: InputDecoration(labelText: 'Setbacks'),
+      validator: (value) => value,
+    ),
+    Row(
+      children: [
+        ElevatedButton(onPressed: () {}, child: Text('Add Setback')),
+        ElevatedButton(onPressed: () {}, child: Text('Remove Setback')),
+      ],
+    ),
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -40,38 +81,33 @@ class _StoryDetailsState extends State<StoryDetails> {
       body: Center(
         child: Column(
           children: [
-            Container(child: Text('Story info ${widget.story}')),
+            Card(child: Text('Story info ${widget.story}')),
             Form(
               key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  TextFormField(
-                    controller: _nameController,
-                    decoration: InputDecoration(labelText: 'Metric Name'),
-                    validator: (value) => value,
+                  Card(
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          controller: _nameController,
+                          decoration: InputDecoration(labelText: 'Metric Name'),
+                          validator: (value) => value,
+                        ),
+                        TextFormField(
+                          controller: _targetController,
+                          decoration: InputDecoration(labelText: 'Target'),
+                          validator: (value) => value,
+                        ),
+                      ],
+                    ),
                   ),
-                  TextFormField(
-                    controller: _targetController,
-                    decoration: InputDecoration(labelText: 'Target'),
-                    validator: (value) => value,
-                  ),
+
                   Text('Progress time interval picker'),
-                  TextFormField(
-                    controller: _progressValuesController,
-                    decoration: InputDecoration(labelText: 'Progress made'),
-                    validator: (value) => value,
-                  ),
-                  TextFormField(
-                    controller: _milestoneValuesController,
-                    decoration: InputDecoration(labelText: 'Milestones'),
-                    validator: (value) => value,
-                  ),
-                  TextFormField(
-                    controller: _setbackValuesController,
-                    decoration: InputDecoration(labelText: 'Setbacks'),
-                    validator: (value) => value,
-                  ),
+                  Card(child: Column(children: _progressFormWidgets)),
+                  Card(child: Column(children: _milestoneFormWidgets)),
+                  Card(child: Column(children: _setbacksFormWidgets)),
                 ],
               ),
             ),
