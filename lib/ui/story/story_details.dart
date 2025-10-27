@@ -140,14 +140,63 @@ class _StoryDetailsState extends State<StoryDetails> {
     _initMetricData();
   }
 
-  void _initMetricData() async {}
+  void _initMetricData() async {
+    final metricsList = await widget.storyViewModel.getMetricsOfStory(
+      widget.story.id,
+    );
+
+    if (metricsList.isEmpty) return;
+
+    final metric = metricsList[0];
+    _nameController.text = metric.name ?? '';
+    _targetController.text = metric.target ?? '';
+
+    if (metric.progressValues != null && metric.progressValues!.isNotEmpty) {
+      _progressFormWidgets.removeAt(0);
+      _progressValuesControllers.removeAt(0);
+      for (final progress in metric.progressValues!) {
+        final controller = TextEditingController()..text = progress;
+        _progressFormWidgets.insert(_progressFormWidgets.length-1, TextFormField(controller: controller, validator: (value) => value));
+        _progressValuesControllers.add(controller);
+      }
+    }
+
+    if (metric.milestoneNames != null && metric.milestoneNames!.isNotEmpty) {
+      _milestoneFormWidgets.removeAt(0);
+      _milestoneValuesControllers.removeAt(0);
+      for (final milestone in metric.milestoneNames!) {
+        final controller = TextEditingController()..text = milestone;
+        _milestoneFormWidgets.insert(_milestoneFormWidgets.length-1, TextFormField(controller: controller, validator: (value) => value));
+        _milestoneValuesControllers.add(controller);
+      }
+    }
+
+    if (metric.setbackNames != null && metric.setbackNames!.isNotEmpty) {
+      _setbacksFormWidgets.removeAt(0);
+      _setbackValuesControllers.removeAt(0);
+      for (final setback in metric.setbackNames!) {
+        final controller = TextEditingController()..text = setback;
+        _setbacksFormWidgets.insert(_setbacksFormWidgets.length-1, TextFormField(controller: controller, validator: (value) => value));
+        _setbackValuesControllers.add(controller);
+      }
+    }
+
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('${widget.story.name}'),
-        actions: [TextButton(onPressed: () {_saveMetric();}, child: Text('Save'))],
+        actions: [
+          TextButton(
+            onPressed: () {
+              _saveMetric();
+            },
+            child: Text('Save'),
+          ),
+        ],
       ),
       body: Center(
         child: Column(
