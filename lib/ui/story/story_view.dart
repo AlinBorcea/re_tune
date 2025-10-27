@@ -72,7 +72,12 @@ class _StoryViewState extends State<StoryView> {
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).push(
-                      MaterialPageRoute(builder: (builder) => StoryDetails()),
+                      MaterialPageRoute(
+                        builder: (builder) => StoryDetails(
+                          storyViewModel: _viewModel,
+                          story: story,
+                        ),
+                      ),
                     );
                   },
                   child: Text('Details'),
