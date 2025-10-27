@@ -35,4 +35,10 @@ class StoryViewModel {
   ///MetricSchema
   Future<List<Metric>> getMetricsOfStory(int storyId) =>
       _isar.metrics.where().storyIdEqualTo(storyId).findAll();
+
+  void pushMetric(Metric metric) {
+    _isar.writeTxn(() async {
+      _isar.metrics.put(metric);
+    });
+  }
 }

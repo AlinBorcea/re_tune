@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:re_tune/domain/models/metric/metric.dart';
 import 'package:re_tune/ui/story/story_view_model.dart';
 
 import '../../domain/models/story/story.dart';
@@ -144,7 +145,10 @@ class _StoryDetailsState extends State<StoryDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Details of story')),
+      appBar: AppBar(
+        title: Text('${widget.story.name}'),
+        actions: [TextButton(onPressed: () {_saveMetric();}, child: Text('Save'))],
+      ),
       body: Center(
         child: Column(
           children: [
@@ -182,6 +186,36 @@ class _StoryDetailsState extends State<StoryDetails> {
         ),
       ),
     );
+  }
+
+  void _saveMetric() {
+    final metric = Metric()
+      ..name = _nameController.text
+      ..target = _targetController.text
+      ..progressTimeInterval = TimeInterval.daily
+      ..progressValues = List.generate(
+        _progressValuesControllers.length,
+        (index) => _progressValuesControllers[index].text,
+      )
+      ..progressDone = List.generate(
+        _progressValuesControllers.length,
+        (index) => false,
+      )
+      ..milestoneNames = List.generate(
+        _milestoneValuesControllers.length,
+        (index) => _milestoneValuesControllers[index].text,
+      )
+      ..milestonesDone = List.generate(
+        _milestoneValuesControllers.length,
+        (index) => false,
+      )
+      ..setbackNames = List.generate(
+        _setbackValuesControllers.length,
+        (index) => _setbackValuesControllers[index].text,
+      )
+      ..storyId = widget.story.id;
+
+    widget.storyViewModel.pushMetric(metric);
   }
 
   void _insertTextFormFieldInWidgetList(
