@@ -20,22 +20,24 @@ class StoryDetails extends StatefulWidget {
 
 class _StoryDetailsState extends State<StoryDetails> {
   final _formKey = GlobalKey<FormState>();
+
+  late final int? _metricId;
   final _nameController = TextEditingController();
   final _targetController = TextEditingController();
 
-  final List<TextEditingController> _progressValuesControllers = [
+  final List<TextEditingController> _progressControllers = [
     TextEditingController(),
   ];
-  final List<TextEditingController> _milestoneValuesControllers = [
+  final List<TextEditingController> _milestoneControllers = [
     TextEditingController(),
   ];
-  final List<TextEditingController> _setbackValuesControllers = [
+  final List<TextEditingController> _setbackControllers = [
     TextEditingController(),
   ];
 
   late final List<Widget> _progressFormWidgets = [
     TextFormField(
-      controller: _progressValuesControllers[0],
+      controller: _progressControllers[0],
       decoration: InputDecoration(labelText: 'Progress made'),
       validator: (value) => value,
     ),
@@ -46,7 +48,7 @@ class _StoryDetailsState extends State<StoryDetails> {
             setState(() {
               _insertTextFormFieldInWidgetList(
                 _progressFormWidgets,
-                _progressValuesControllers,
+                _progressControllers,
               );
             });
           },
@@ -57,7 +59,7 @@ class _StoryDetailsState extends State<StoryDetails> {
             setState(() {
               _removeTextFormFieldInWidgetList(
                 _progressFormWidgets,
-                _progressValuesControllers,
+                _progressControllers,
               );
             });
           },
@@ -69,7 +71,7 @@ class _StoryDetailsState extends State<StoryDetails> {
 
   late final List<Widget> _milestoneFormWidgets = [
     TextFormField(
-      controller: _milestoneValuesControllers[0],
+      controller: _milestoneControllers[0],
       decoration: InputDecoration(labelText: 'Milestones'),
       validator: (value) => value,
     ),
@@ -80,7 +82,7 @@ class _StoryDetailsState extends State<StoryDetails> {
             setState(() {
               _insertTextFormFieldInWidgetList(
                 _milestoneFormWidgets,
-                _milestoneValuesControllers,
+                _milestoneControllers,
               );
             });
           },
@@ -91,7 +93,7 @@ class _StoryDetailsState extends State<StoryDetails> {
             setState(() {
               _removeTextFormFieldInWidgetList(
                 _milestoneFormWidgets,
-                _milestoneValuesControllers,
+                _milestoneControllers,
               );
             });
           },
@@ -102,7 +104,7 @@ class _StoryDetailsState extends State<StoryDetails> {
   ];
   late final List<Widget> _setbacksFormWidgets = [
     TextFormField(
-      controller: _setbackValuesControllers[0],
+      controller: _setbackControllers[0],
       decoration: InputDecoration(labelText: 'Setbacks'),
       validator: (value) => value,
     ),
@@ -113,7 +115,7 @@ class _StoryDetailsState extends State<StoryDetails> {
             setState(() {
               _insertTextFormFieldInWidgetList(
                 _setbacksFormWidgets,
-                _setbackValuesControllers,
+                _setbackControllers,
               );
             });
           },
@@ -124,7 +126,7 @@ class _StoryDetailsState extends State<StoryDetails> {
             setState(() {
               _removeTextFormFieldInWidgetList(
                 _setbacksFormWidgets,
-                _setbackValuesControllers,
+                _setbackControllers,
               );
             });
           },
@@ -148,36 +150,47 @@ class _StoryDetailsState extends State<StoryDetails> {
     if (metricsList.isEmpty) return;
 
     final metric = metricsList[0];
+
+    _metricId = metric.id;
     _nameController.text = metric.name ?? '';
     _targetController.text = metric.target ?? '';
 
     if (metric.progressValues != null && metric.progressValues!.isNotEmpty) {
       _progressFormWidgets.removeAt(0);
-      _progressValuesControllers.removeAt(0);
+      _progressControllers.removeAt(0);
       for (final progress in metric.progressValues!) {
         final controller = TextEditingController()..text = progress;
-        _progressFormWidgets.insert(_progressFormWidgets.length-1, TextFormField(controller: controller, validator: (value) => value));
-        _progressValuesControllers.add(controller);
+        _progressFormWidgets.insert(
+          _progressFormWidgets.length - 1,
+          TextFormField(controller: controller, validator: (value) => value),
+        );
+        _progressControllers.add(controller);
       }
     }
 
     if (metric.milestoneNames != null && metric.milestoneNames!.isNotEmpty) {
       _milestoneFormWidgets.removeAt(0);
-      _milestoneValuesControllers.removeAt(0);
+      _milestoneControllers.removeAt(0);
       for (final milestone in metric.milestoneNames!) {
         final controller = TextEditingController()..text = milestone;
-        _milestoneFormWidgets.insert(_milestoneFormWidgets.length-1, TextFormField(controller: controller, validator: (value) => value));
-        _milestoneValuesControllers.add(controller);
+        _milestoneFormWidgets.insert(
+          _milestoneFormWidgets.length - 1,
+          TextFormField(controller: controller, validator: (value) => value),
+        );
+        _milestoneControllers.add(controller);
       }
     }
 
     if (metric.setbackNames != null && metric.setbackNames!.isNotEmpty) {
       _setbacksFormWidgets.removeAt(0);
-      _setbackValuesControllers.removeAt(0);
+      _setbackControllers.removeAt(0);
       for (final setback in metric.setbackNames!) {
         final controller = TextEditingController()..text = setback;
-        _setbacksFormWidgets.insert(_setbacksFormWidgets.length-1, TextFormField(controller: controller, validator: (value) => value));
-        _setbackValuesControllers.add(controller);
+        _setbacksFormWidgets.insert(
+          _setbacksFormWidgets.length - 1,
+          TextFormField(controller: controller, validator: (value) => value),
+        );
+        _setbackControllers.add(controller);
       }
     }
 
@@ -243,27 +256,28 @@ class _StoryDetailsState extends State<StoryDetails> {
       ..target = _targetController.text
       ..progressTimeInterval = TimeInterval.daily
       ..progressValues = List.generate(
-        _progressValuesControllers.length,
-        (index) => _progressValuesControllers[index].text,
+        _progressControllers.length,
+        (index) => _progressControllers[index].text,
       )
       ..progressDone = List.generate(
-        _progressValuesControllers.length,
+        _progressControllers.length,
         (index) => false,
       )
       ..milestoneNames = List.generate(
-        _milestoneValuesControllers.length,
-        (index) => _milestoneValuesControllers[index].text,
+        _milestoneControllers.length,
+        (index) => _milestoneControllers[index].text,
       )
       ..milestonesDone = List.generate(
-        _milestoneValuesControllers.length,
+        _milestoneControllers.length,
         (index) => false,
       )
       ..setbackNames = List.generate(
-        _setbackValuesControllers.length,
-        (index) => _setbackValuesControllers[index].text,
+        _setbackControllers.length,
+        (index) => _setbackControllers[index].text,
       )
       ..storyId = widget.story.id;
 
+    if (_metricId != null) metric.id = _metricId;
     widget.storyViewModel.pushMetric(metric);
   }
 
