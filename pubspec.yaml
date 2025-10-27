@@ -37,6 +37,7 @@ dependencies:
   isar: *isar_version
   isar_flutter_libs: *isar_version # contains Isar Core
   path_provider: ^2.1.5
+  date_field: ^6.0.0
   cupertino_icons: ^1.0.8
 
 dev_dependencies:
