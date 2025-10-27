@@ -33,4 +33,6 @@ class StoryViewModel {
       startDate != null && endDate != null && startDate.compareTo(endDate) < 0;
 
   ///MetricSchema
+  Future<List<Metric>> getMetricsOfStory(int storyId) =>
+      _isar.metrics.where().storyIdEqualTo(storyId).findAll();
 }

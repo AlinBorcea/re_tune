@@ -89,7 +89,21 @@ const MetricSchema = CollectionSchema(
   deserialize: _metricDeserialize,
   deserializeProp: _metricDeserializeProp,
   idName: r'id',
-  indexes: {},
+  indexes: {
+    r'storyId': IndexSchema(
+      id: -7904996416186759579,
+      name: r'storyId',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'storyId',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    )
+  },
   links: {},
   embeddedSchemas: {},
   getId: _metricGetId,
@@ -313,6 +327,14 @@ extension MetricQueryWhereSort on QueryBuilder<Metric, Metric, QWhere> {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
+
+  QueryBuilder<Metric, Metric, QAfterWhere> anyStoryId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'storyId'),
+      );
+    });
+  }
 }
 
 extension MetricQueryWhere on QueryBuilder<Metric, Metric, QWhereClause> {
@@ -376,6 +398,115 @@ extension MetricQueryWhere on QueryBuilder<Metric, Metric, QWhereClause> {
         lower: lowerId,
         includeLower: includeLower,
         upper: upperId,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Metric, Metric, QAfterWhereClause> storyIdIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'storyId',
+        value: [null],
+      ));
+    });
+  }
+
+  QueryBuilder<Metric, Metric, QAfterWhereClause> storyIdIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'storyId',
+        lower: [null],
+        includeLower: false,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<Metric, Metric, QAfterWhereClause> storyIdEqualTo(int? storyId) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'storyId',
+        value: [storyId],
+      ));
+    });
+  }
+
+  QueryBuilder<Metric, Metric, QAfterWhereClause> storyIdNotEqualTo(
+      int? storyId) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'storyId',
+              lower: [],
+              upper: [storyId],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'storyId',
+              lower: [storyId],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'storyId',
+              lower: [storyId],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'storyId',
+              lower: [],
+              upper: [storyId],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Metric, Metric, QAfterWhereClause> storyIdGreaterThan(
+    int? storyId, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'storyId',
+        lower: [storyId],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<Metric, Metric, QAfterWhereClause> storyIdLessThan(
+    int? storyId, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'storyId',
+        lower: [],
+        upper: [storyId],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<Metric, Metric, QAfterWhereClause> storyIdBetween(
+    int? lowerStoryId,
+    int? upperStoryId, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'storyId',
+        lower: [lowerStoryId],
+        includeLower: includeLower,
+        upper: [upperStoryId],
         includeUpper: includeUpper,
       ));
     });

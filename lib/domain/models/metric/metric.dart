@@ -30,6 +30,7 @@ class Metric {
 
   List<String>? results;
 
+  @Index()
   int? storyId;
 }
 
