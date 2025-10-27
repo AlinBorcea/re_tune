@@ -21,47 +21,114 @@ class _StoryDetailsState extends State<StoryDetails> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _targetController = TextEditingController();
-  final _progressValuesController = TextEditingController();
-  final _milestoneValuesController = TextEditingController();
-  final _setbackValuesController = TextEditingController();
+
+  final List<TextEditingController> _progressValuesControllers = [
+    TextEditingController(),
+  ];
+  final List<TextEditingController> _milestoneValuesControllers = [
+    TextEditingController(),
+  ];
+  final List<TextEditingController> _setbackValuesControllers = [
+    TextEditingController(),
+  ];
 
   late final List<Widget> _progressFormWidgets = [
     TextFormField(
-      controller: _progressValuesController,
+      controller: _progressValuesControllers[0],
       decoration: InputDecoration(labelText: 'Progress made'),
       validator: (value) => value,
     ),
     Row(
       children: [
-        ElevatedButton(onPressed: () {}, child: Text('Add Progress')),
-        ElevatedButton(onPressed: () {}, child: Text('Remove Progress')),
+        ElevatedButton(
+          onPressed: () {
+            setState(() {
+              _insertTextFormFieldInWidgetList(
+                _progressFormWidgets,
+                _progressValuesControllers,
+              );
+            });
+          },
+          child: Text('Add Progress'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            setState(() {
+              _removeTextFormFieldInWidgetList(
+                _progressFormWidgets,
+                _progressValuesControllers,
+              );
+            });
+          },
+          child: Text('Remove Progress'),
+        ),
       ],
     ),
   ];
 
   late final List<Widget> _milestoneFormWidgets = [
     TextFormField(
-      controller: _milestoneValuesController,
+      controller: _milestoneValuesControllers[0],
       decoration: InputDecoration(labelText: 'Milestones'),
       validator: (value) => value,
     ),
     Row(
       children: [
-        ElevatedButton(onPressed: () {}, child: Text('Add Milestone')),
-        ElevatedButton(onPressed: () {}, child: Text('Remove Milestone')),
+        ElevatedButton(
+          onPressed: () {
+            setState(() {
+              _insertTextFormFieldInWidgetList(
+                _milestoneFormWidgets,
+                _milestoneValuesControllers,
+              );
+            });
+          },
+          child: Text('Add Milestone'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            setState(() {
+              _removeTextFormFieldInWidgetList(
+                _milestoneFormWidgets,
+                _milestoneValuesControllers,
+              );
+            });
+          },
+          child: Text('Remove Milestone'),
+        ),
       ],
     ),
   ];
   late final List<Widget> _setbacksFormWidgets = [
     TextFormField(
-      controller: _setbackValuesController,
+      controller: _setbackValuesControllers[0],
       decoration: InputDecoration(labelText: 'Setbacks'),
       validator: (value) => value,
     ),
     Row(
       children: [
-        ElevatedButton(onPressed: () {}, child: Text('Add Setback')),
-        ElevatedButton(onPressed: () {}, child: Text('Remove Setback')),
+        ElevatedButton(
+          onPressed: () {
+            setState(() {
+              _insertTextFormFieldInWidgetList(
+                _setbacksFormWidgets,
+                _setbackValuesControllers,
+              );
+            });
+          },
+          child: Text('Add Setback'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            setState(() {
+              _removeTextFormFieldInWidgetList(
+                _setbacksFormWidgets,
+                _setbackValuesControllers,
+              );
+            });
+          },
+          child: Text('Remove Setback'),
+        ),
       ],
     ),
   ];
@@ -115,5 +182,25 @@ class _StoryDetailsState extends State<StoryDetails> {
         ),
       ),
     );
+  }
+
+  void _insertTextFormFieldInWidgetList(
+    List<Widget> formList,
+    List<TextEditingController> controllers,
+  ) {
+    controllers.add(TextEditingController());
+    formList.insert(
+      formList.length - 1,
+      TextFormField(controller: controllers.last, validator: (value) => value),
+    );
+  }
+
+  void _removeTextFormFieldInWidgetList(
+    List<Widget> formList,
+    List<TextEditingController> controllers,
+  ) {
+    if (formList.length <= 2) return;
+    controllers.removeLast();
+    formList.removeAt(formList.length - 2);
   }
 }
