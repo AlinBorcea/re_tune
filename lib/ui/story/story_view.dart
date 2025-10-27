@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:re_tune/ui/story/story_add_view.dart';
+import 'package:re_tune/ui/story/story_add_edit_view.dart';
 import 'package:re_tune/ui/story/story_view_model.dart';
 
 import '../../domain/models/story/story.dart';
@@ -44,7 +44,8 @@ class _StoryViewState extends State<StoryView> {
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (builder) => StoryViewAdd(storyViewModel: _viewModel),
+              builder: (builder) =>
+                  StoryViewAddEdit(storyViewModel: _viewModel, story: null),
             ),
           );
         },
@@ -76,6 +77,19 @@ class _StoryViewState extends State<StoryView> {
                 TextButton(
                   onPressed: () => _showAlertDialogDeleteStory(story),
                   child: Text('Delete'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (builder) => StoryViewAddEdit(
+                          storyViewModel: _viewModel,
+                          story: story,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Text('Edit'),
                 ),
               ],
             ),
