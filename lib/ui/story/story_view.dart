@@ -29,6 +29,7 @@ class _StoryViewState extends State<StoryView> {
     _viewModel = StoryViewModel(path.path);
     _stories = await _viewModel.stories;
     _initDone = true;
+    setState(() {});
   }
 
   @override
