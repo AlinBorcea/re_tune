@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:re_tune/ui/story/story_add_edit_view.dart';
+import 'package:re_tune/ui/story/story_details.dart';
 import 'package:re_tune/ui/story/story_view_model.dart';
 
 import '../../domain/models/story/story.dart';
@@ -70,7 +71,9 @@ class _StoryViewState extends State<StoryView> {
               children: [
                 TextButton(
                   onPressed: () {
-                    debugPrint('Opening story details');
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (builder) => StoryDetails()),
+                    );
                   },
                   child: Text('Details'),
                 ),

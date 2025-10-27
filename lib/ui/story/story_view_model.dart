@@ -1,4 +1,5 @@
 import 'package:isar/isar.dart';
+import 'package:re_tune/domain/models/metric/metric.dart';
 import 'package:re_tune/domain/models/story/story.dart';
 
 class StoryViewModel {
@@ -6,8 +7,9 @@ class StoryViewModel {
   final String appDocPath;
 
   StoryViewModel(this.appDocPath)
-    : _isar = Isar.openSync([StorySchema], directory: appDocPath);
+    : _isar = Isar.openSync([StorySchema, MetricSchema], directory: appDocPath);
 
+  /// StorySchema
   Future<List<Story>> get stories => _isar.storys.where().findAll();
 
   void putStory(Story story) {
@@ -29,4 +31,6 @@ class StoryViewModel {
 
   bool isValidStoryDates(DateTime? startDate, DateTime? endDate) =>
       startDate != null && endDate != null && startDate.compareTo(endDate) < 0;
+
+  ///MetricSchema
 }
