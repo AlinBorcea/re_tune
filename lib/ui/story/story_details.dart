@@ -24,6 +24,12 @@ class _StoryDetailsState extends State<StoryDetails> {
   late final int? _metricId;
   final _nameController = TextEditingController();
   final _targetController = TextEditingController();
+  final _timeIntervalValues = [
+    TimeInterval.daily,
+    TimeInterval.weekly,
+    TimeInterval.monthly,
+  ];
+  var _selectedTimeInterval = TimeInterval.daily;
 
   final List<TextEditingController> _progressControllers = [
     TextEditingController(),
@@ -214,7 +220,7 @@ class _StoryDetailsState extends State<StoryDetails> {
       body: Center(
         child: Column(
           children: [
-            Card(child: Text('Story info ${widget.story}')),
+            _storyInfoSection(widget.story),
             Form(
               key: _formKey,
               child: Column(
@@ -236,8 +242,34 @@ class _StoryDetailsState extends State<StoryDetails> {
                       ],
                     ),
                   ),
+                  Row(
+                    children: [
+                      DropdownButton<TimeInterval>(
+                        value: _selectedTimeInterval,
+                        icon: const Icon(Icons.arrow_downward),
+                        elevation: 16,
+                        onChanged: (TimeInterval? value) {
+                          // This is called when the user selects an item.
+                          setState(() {
+                            if (value != null) {
+                              _selectedTimeInterval = value;
+                            }
+                          });
+                        },
+                        items: _timeIntervalValues
+                            .map<DropdownMenuItem<TimeInterval>>((
+                              TimeInterval value,
+                            ) {
+                              return DropdownMenuItem<TimeInterval>(
+                                value: value,
+                                child: Text(_getTimeIntervalValue(value)),
+                              );
+                            })
+                            .toList(),
+                      ),
+                    ],
+                  ),
 
-                  Text('Progress time interval picker'),
                   Card(child: Column(children: _progressFormWidgets)),
                   Card(child: Column(children: _milestoneFormWidgets)),
                   Card(child: Column(children: _setbacksFormWidgets)),
@@ -246,6 +278,29 @@ class _StoryDetailsState extends State<StoryDetails> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _storyInfoSection(Story story) {
+    return Card(
+      child: Column(
+        children: [
+          Row(children: [Text('Name: '), Text(story.name ?? '')]),
+          Row(children: [Text('Description: '), Text(story.description ?? '')]),
+          Row(
+            children: [
+              Text('Start Date: '),
+              Text(story.startDate.toString() ?? ''),
+            ],
+          ),
+          Row(
+            children: [
+              Text('End Date: '),
+              Text(story.endDate.toString() ?? ''),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -299,5 +354,14 @@ class _StoryDetailsState extends State<StoryDetails> {
     if (formList.length <= 2) return;
     controllers.removeLast();
     formList.removeAt(formList.length - 2);
+  }
+
+  String _getTimeIntervalValue(TimeInterval interval) {
+    return switch (interval) {
+      TimeInterval.daily => 'Daily',
+      TimeInterval.weekly => 'Weekly',
+      TimeInterval.monthly => 'Monthly',
+      _ => 'Unknown time interval',
+    };
   }
 }
