@@ -309,7 +309,7 @@ class _StoryDetailsState extends State<StoryDetails> {
     final metric = Metric()
       ..name = _nameController.text
       ..target = _targetController.text
-      ..progressTimeInterval = TimeInterval.daily
+      ..progressTimeInterval = _selectedTimeInterval
       ..progressValues = List.generate(
         _progressControllers.length,
         (index) => _progressControllers[index].text,
