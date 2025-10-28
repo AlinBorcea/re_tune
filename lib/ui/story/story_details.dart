@@ -291,13 +291,13 @@ class _StoryDetailsState extends State<StoryDetails> {
           Row(
             children: [
               Text('Start Date: '),
-              Text(story.startDate.toString() ?? ''),
+              Text(story.startDate.toString()),
             ],
           ),
           Row(
             children: [
               Text('End Date: '),
-              Text(story.endDate.toString() ?? ''),
+              Text(story.endDate.toString()),
             ],
           ),
         ],
@@ -361,7 +361,7 @@ class _StoryDetailsState extends State<StoryDetails> {
       TimeInterval.daily => 'Daily',
       TimeInterval.weekly => 'Weekly',
       TimeInterval.monthly => 'Monthly',
-      _ => 'Unknown time interval',
+      //_ => 'Unknown time interval',
     };
   }
 }
