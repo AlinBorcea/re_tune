@@ -21,14 +21,23 @@ class _StoryViewState extends State<StoryView> {
   @override
   void initState() {
     super.initState();
-    _initData();
+    _initAll();
   }
 
-  void _initData() async {
+  void _initAll() async {
+    await _initIsar();
+    await _initData();
+  }
+
+  Future<void> _initIsar() async {
     final path = await getApplicationDocumentsDirectory();
     _viewModel = StoryViewModel(path.path);
+  }
+
+  Future<void> _initData() async {
     _stories = await _viewModel.stories;
     _initDone = true;
+    debugPrint(_stories.toString());
     setState(() {});
   }
 
@@ -43,13 +52,15 @@ class _StoryViewState extends State<StoryView> {
             )
           : Text("Init not done!"),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
+        onPressed: () async {
+          await Navigator.of(context).push(
             MaterialPageRoute(
               builder: (builder) =>
                   StoryViewAddEdit(storyViewModel: _viewModel, story: null),
             ),
           );
+          debugPrint('Fab debug re init data');
+          _initData();
         },
         child: Icon(Icons.add),
       ),
@@ -88,8 +99,8 @@ class _StoryViewState extends State<StoryView> {
                   child: Text('Delete'),
                 ),
                 TextButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
+                  onPressed: () async {
+                    await Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (builder) => StoryViewAddEdit(
                           storyViewModel: _viewModel,
@@ -97,6 +108,7 @@ class _StoryViewState extends State<StoryView> {
                         ),
                       ),
                     );
+                    _initData();
                   },
                   child: Text('Edit'),
                 ),
@@ -119,9 +131,10 @@ class _StoryViewState extends State<StoryView> {
             child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () {
-              _viewModel.deleteStory(story);
+            onPressed: () async {
+              await _viewModel.deleteStory(story);
               Navigator.pop(context);
+              _initData();
             },
             child: const Text('Yes'),
           ),

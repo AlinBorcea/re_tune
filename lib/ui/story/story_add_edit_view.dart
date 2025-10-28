@@ -80,7 +80,7 @@ class _StoryViewAddEditState extends State<StoryViewAddEdit> {
                 },
               ),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   bool isValid1 = _formKey.currentState!.validate();
                   bool isValid2 = widget.storyViewModel.isValidStoryDates(
                     _startDate,
@@ -94,8 +94,8 @@ class _StoryViewAddEditState extends State<StoryViewAddEdit> {
                     ..endDate = _endDate;
 
                   if (widget.story != null) story.id = widget.story!.id;
-                  widget.storyViewModel.putStory(story);
-                  Navigator.of(context).pop();
+                  await widget.storyViewModel.putStory(story);
+                  //Navigator.of(context).pop();
                 },
                 child: Text('Save'),
               ),

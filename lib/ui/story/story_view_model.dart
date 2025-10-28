@@ -12,15 +12,15 @@ class StoryViewModel {
   /// StorySchema
   Future<List<Story>> get stories => _isar.storys.where().findAll();
 
-  void putStory(Story story) {
-    _isar.writeTxn(() async {
+  Future<void> putStory(Story story) async {
+    await _isar.writeTxn(() async {
       await _isar.storys.put(story);
     });
   }
 
-  void deleteStory(Story story) {
-    _isar.writeTxn(() async {
-      _isar.storys.delete(story.id);
+  Future<void> deleteStory(Story story) async {
+    await _isar.writeTxn(() async {
+      await _isar.storys.delete(story.id);
     });
   }
 
