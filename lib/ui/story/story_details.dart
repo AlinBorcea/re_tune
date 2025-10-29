@@ -55,18 +55,8 @@ class _StoryDetailsState extends State<StoryDetails> {
     ),
     Row(
       children: [
-        ElevatedButton(
-          onPressed: () {
-            setState(() {
-              _insertTextFormFieldInWidgetList(
-                _progressFormWidgets,
-                _progressControllers,
-              );
-            });
-          },
-          child: Text('Add Progress'),
-        ),
-        ElevatedButton(
+        IconButton(
+          icon: Icon(Icons.remove, color: Colors.red,),
           onPressed: () {
             setState(() {
               _removeTextFormFieldInWidgetList(
@@ -75,7 +65,17 @@ class _StoryDetailsState extends State<StoryDetails> {
               );
             });
           },
-          child: Text('Remove Progress'),
+        ),
+        IconButton(
+          icon: Icon(Icons.add),
+          onPressed: () {
+            setState(() {
+              _insertTextFormFieldInWidgetList(
+                _progressFormWidgets,
+                _progressControllers,
+              );
+            });
+          },
         ),
       ],
     ),
@@ -95,18 +95,8 @@ class _StoryDetailsState extends State<StoryDetails> {
     ),
     Row(
       children: [
-        ElevatedButton(
-          onPressed: () {
-            setState(() {
-              _insertTextFormFieldInWidgetList(
-                _milestoneFormWidgets,
-                _milestoneControllers,
-              );
-            });
-          },
-          child: Text('Add Milestone'),
-        ),
-        ElevatedButton(
+        IconButton(
+          icon: Icon(Icons.remove, color: Colors.red,),
           onPressed: () {
             setState(() {
               _removeTextFormFieldInWidgetList(
@@ -115,7 +105,17 @@ class _StoryDetailsState extends State<StoryDetails> {
               );
             });
           },
-          child: Text('Remove Milestone'),
+        ),
+        IconButton(
+          icon: Icon(Icons.add),
+          onPressed: () {
+            setState(() {
+              _insertTextFormFieldInWidgetList(
+                _milestoneFormWidgets,
+                _milestoneControllers,
+              );
+            });
+          },
         ),
       ],
     ),
@@ -134,18 +134,8 @@ class _StoryDetailsState extends State<StoryDetails> {
     ),
     Row(
       children: [
-        ElevatedButton(
-          onPressed: () {
-            setState(() {
-              _insertTextFormFieldInWidgetList(
-                _setbacksFormWidgets,
-                _setbackControllers,
-              );
-            });
-          },
-          child: Text('Add Setback'),
-        ),
-        ElevatedButton(
+        IconButton(
+          icon: Icon(Icons.remove, color: Colors.red,),
           onPressed: () {
             setState(() {
               _removeTextFormFieldInWidgetList(
@@ -154,7 +144,17 @@ class _StoryDetailsState extends State<StoryDetails> {
               );
             });
           },
-          child: Text('Remove Setback'),
+        ),
+        IconButton(
+          icon: Icon(Icons.add),
+          onPressed: () {
+            setState(() {
+              _insertTextFormFieldInWidgetList(
+                _setbacksFormWidgets,
+                _setbackControllers,
+              );
+            });
+          },
         ),
       ],
     ),
@@ -247,37 +247,46 @@ class _StoryDetailsState extends State<StoryDetails> {
                   Card(
                     child: Column(
                       children: [
-                        TextFormField(
-                          controller: _nameController,
-                          decoration: InputDecoration(
-                            labelText: 'Metric Name',
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(4.0),
-                              ),
-                              borderSide: BorderSide(
-                                color: Colors.black,
-                                width: 1,
-                              ),
-                            ),
-                          ),
-                          validator: (value) => value,
-                        ),
-                        TextFormField(
-                          controller: _targetController,
-                          decoration: InputDecoration(
-                            labelText: 'Target',
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(4.0),
-                              ),
-                              borderSide: BorderSide(
-                                color: Colors.black,
-                                width: 1,
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                controller: _nameController,
+                                decoration: InputDecoration(
+                                  labelText: 'Metric Name',
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(4.0),
+                                    ),
+                                    borderSide: BorderSide(
+                                      color: Colors.black,
+                                      width: 1,
+                                    ),
+                                  ),
+                                ),
+                                validator: (value) => value,
                               ),
                             ),
-                          ),
-                          validator: (value) => value,
+                            SizedBox(width: 2),
+                            Expanded(
+                              child: TextFormField(
+                                controller: _targetController,
+                                decoration: InputDecoration(
+                                  labelText: 'Target',
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(4.0),
+                                    ),
+                                    borderSide: BorderSide(
+                                      color: Colors.black,
+                                      width: 1,
+                                    ),
+                                  ),
+                                ),
+                                validator: (value) => value,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
