@@ -37,7 +37,7 @@ class _StoryViewAddEditState extends State<StoryViewAddEdit> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Add Story')),
+      appBar: AppBar(title: Text(widget.story != null ? widget.story!.name! : 'Add Story')),
       body: Center(
         child: Card(
           child: Form(
@@ -74,31 +74,50 @@ class _StoryViewAddEditState extends State<StoryViewAddEdit> {
                       ? null
                       : 'Description must be at least 5 characters long',
                 ),
-                DateTimeFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Enter start date',
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(4.0)),
-                      borderSide: BorderSide(color: Colors.black, width: 1),
+                Row(
+                  children: [
+                    Expanded(
+                      child: DateTimeFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Enter start date',
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(4.0),
+                            ),
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                              width: 1,
+                            ),
+                          ),
+                        ),
+                        initialPickerDateTime: _startDate,
+                        onChanged: (value) {
+                          _startDate = value ?? _startDate;
+                        },
+                      ),
                     ),
-                  ),
-                  initialPickerDateTime: _startDate,
-                  onChanged: (value) {
-                    _startDate = value ?? _startDate;
-                  },
-                ),
-                DateTimeFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Enter end date',
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(4.0)),
-                      borderSide: BorderSide(color: Colors.black, width: 1),
+                    SizedBox(width: 2,),
+                    Expanded(
+                      child: DateTimeFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Enter end date',
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(4.0),
+                            ),
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                              width: 1,
+                            ),
+                          ),
+                        ),
+                        initialPickerDateTime: _endDate,
+                        onChanged: (value) {
+                          _endDate = value ?? _endDate;
+                        },
+                      ),
                     ),
-                  ),
-                  initialPickerDateTime: _endDate,
-                  onChanged: (value) {
-                    _endDate = value ?? _endDate;
-                  },
+                  ],
                 ),
                 ElevatedButton(
                   onPressed: () async {
