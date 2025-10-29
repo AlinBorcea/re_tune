@@ -56,7 +56,7 @@ class _StoryDetailsState extends State<StoryDetails> {
     Row(
       children: [
         IconButton(
-          icon: Icon(Icons.remove, color: Colors.red,),
+          icon: Icon(Icons.remove, color: Colors.red),
           onPressed: () {
             setState(() {
               _removeTextFormFieldInWidgetList(
@@ -96,7 +96,7 @@ class _StoryDetailsState extends State<StoryDetails> {
     Row(
       children: [
         IconButton(
-          icon: Icon(Icons.remove, color: Colors.red,),
+          icon: Icon(Icons.remove, color: Colors.red),
           onPressed: () {
             setState(() {
               _removeTextFormFieldInWidgetList(
@@ -135,7 +135,7 @@ class _StoryDetailsState extends State<StoryDetails> {
     Row(
       children: [
         IconButton(
-          icon: Icon(Icons.remove, color: Colors.red,),
+          icon: Icon(Icons.remove, color: Colors.red),
           onPressed: () {
             setState(() {
               _removeTextFormFieldInWidgetList(
@@ -319,8 +319,22 @@ class _StoryDetailsState extends State<StoryDetails> {
                     ],
                   ),
 
-                  Card(child: Column(children: _progressFormWidgets)),
-                  Card(child: Column(children: _milestoneFormWidgets)),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Card(
+                          child: Column(children: _progressFormWidgets),
+                        ),
+                      ),
+                      SizedBox(width: 2),
+                      Expanded(
+                        child: Card(
+                          child: Column(children: _milestoneFormWidgets),
+                        ),
+                      ),
+                    ],
+                  ),
                   Card(child: Column(children: _setbacksFormWidgets)),
                 ],
               ),
