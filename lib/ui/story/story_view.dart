@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:re_tune/ui/story/story_add_edit_view.dart';
 import 'package:re_tune/ui/story/story_details.dart';
@@ -79,19 +80,30 @@ class _StoryViewState extends State<StoryView> {
 
   Widget _storyItem(Story story) {
     return Card(
-      child: ExpansionTile(
-        title: Text(story.name ?? 'Nothing'),
-        leading: Icon(Icons.note),
+      child: Column(
         children: [
-          ListTile(
-            title: Text(
-              story.description ?? 'Description of the story goes here.',
-            ),
+          ExpansionTile(
+            title: Text(story.name ?? 'Nothing'),
+            leading: Icon(Icons.note),
+            children: [
+              ListTile(
+                title: Text(
+                  story.description ?? 'Description of the story goes here.',
+                ),
+              ),
+            ],
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               TextButton(
-                child: Text('Details'),
+                child: Row(
+                  children: [
+                    Icon(Icons.info, size: 16, color: Colors.blue),
+                    SizedBox(width: 2),
+                    Text('Details'),
+                  ],
+                ),
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
@@ -104,11 +116,23 @@ class _StoryViewState extends State<StoryView> {
                 },
               ),
               TextButton(
-                child: Text('Delete'),
+                child: Row(
+                  children: [
+                    Icon(Icons.delete, size: 16, color: Colors.red),
+                    SizedBox(width: 2),
+                    Text('Delete'),
+                  ],
+                ),
                 onPressed: () => _showAlertDialogDeleteStory(story),
               ),
               TextButton(
-                child: Text('Edit'),
+                child: Row(
+                  children: [
+                    Icon(Icons.edit, size: 16, color: Colors.amber),
+                    SizedBox(width: 2),
+                    Text('Edit'),
+                  ],
+                ),
                 onPressed: () async {
                   await Navigator.of(context).push(
                     MaterialPageRoute(
