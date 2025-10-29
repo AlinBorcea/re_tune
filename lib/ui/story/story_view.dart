@@ -45,25 +45,35 @@ class _StoryViewState extends State<StoryView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Stories')),
-      body: _initDone
-          ? ListView.builder(
+      body: _body(),
+      floatingActionButton: _fab(),
+    );
+  }
+
+  Widget _body() {
+    return _initDone
+        ? Card(
+            child: ListView.builder(
+              padding: EdgeInsets.all(2.0),
               itemCount: _stories.length,
               itemBuilder: (context, index) => _storyItem(_stories[index]),
-            )
-          : Text("Init not done!"),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          await Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (builder) =>
-                  StoryViewAddEdit(storyViewModel: _viewModel, story: null),
             ),
-          );
-          debugPrint('Fab debug re init data');
-          _initData();
-        },
-        child: Icon(Icons.add),
-      ),
+          )
+        : Text("Init not done!");
+  }
+
+  Widget _fab() {
+    return FloatingActionButton(
+      child: Icon(Icons.add),
+      onPressed: () async {
+        await Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (builder) =>
+                StoryViewAddEdit(storyViewModel: _viewModel, story: null),
+          ),
+        );
+        _initData();
+      },
     );
   }
 
@@ -78,42 +88,40 @@ class _StoryViewState extends State<StoryView> {
               story.description ?? 'Description of the story goes here.',
             ),
           ),
-          Card(
-            child: Row(
-              children: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (builder) => StoryDetails(
-                          storyViewModel: _viewModel,
-                          story: story,
-                        ),
+          Row(
+            children: [
+              TextButton(
+                child: Text('Details'),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (builder) => StoryDetails(
+                        storyViewModel: _viewModel,
+                        story: story,
                       ),
-                    );
-                  },
-                  child: Text('Details'),
-                ),
-                TextButton(
-                  onPressed: () => _showAlertDialogDeleteStory(story),
-                  child: Text('Delete'),
-                ),
-                TextButton(
-                  onPressed: () async {
-                    await Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (builder) => StoryViewAddEdit(
-                          storyViewModel: _viewModel,
-                          story: story,
-                        ),
+                    ),
+                  );
+                },
+              ),
+              TextButton(
+                child: Text('Delete'),
+                onPressed: () => _showAlertDialogDeleteStory(story),
+              ),
+              TextButton(
+                child: Text('Edit'),
+                onPressed: () async {
+                  await Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (builder) => StoryViewAddEdit(
+                        storyViewModel: _viewModel,
+                        story: story,
                       ),
-                    );
-                    _initData();
-                  },
-                  child: Text('Edit'),
-                ),
-              ],
-            ),
+                    ),
+                  );
+                  _initData();
+                },
+              ),
+            ],
           ),
         ],
       ),
@@ -127,16 +135,16 @@ class _StoryViewState extends State<StoryView> {
         title: Text('Delete story ${story.name}?'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context, 'Cancel'),
             child: const Text('Cancel'),
+            onPressed: () => Navigator.pop(context, 'Cancel'),
           ),
           TextButton(
+            child: const Text('Yes'),
             onPressed: () async {
               await _viewModel.deleteStory(story);
               Navigator.pop(context);
               _initData();
             },
-            child: const Text('Yes'),
           ),
         ],
       ),

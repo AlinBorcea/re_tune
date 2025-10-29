@@ -39,67 +39,89 @@ class _StoryViewAddEditState extends State<StoryViewAddEdit> {
     return Scaffold(
       appBar: AppBar(title: Text('Add Story')),
       body: Center(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _nameController,
-                decoration: InputDecoration(
-                  labelText: 'Story Name',
-                  hintText: 'Start a great story!',
+        child: Card(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: _nameController,
+                  decoration: InputDecoration(
+                    labelText: 'Story Name',
+                    hintText: 'Start a great story!',
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                      borderSide: BorderSide(color: Colors.black, width: 1),
+                    ),
+                  ),
+                  validator: (value) =>
+                      widget.storyViewModel.isValidStoryName(value)
+                      ? null
+                      : 'Name is not valid!',
                 ),
-                validator: (value) =>
-                    widget.storyViewModel.isValidStoryName(value)
-                    ? null
-                    : 'Name is not valid!',
-              ),
-              TextFormField(
-                controller: _descriptionController,
-                decoration: InputDecoration(
-                  labelText: 'Story Description',
-                  hintText: 'Tell everyone more about it!',
+                TextFormField(
+                  controller: _descriptionController,
+                  decoration: InputDecoration(
+                    labelText: 'Story Description',
+                    hintText: 'Tell everyone more about it!',
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                      borderSide: BorderSide(color: Colors.black, width: 1),
+                    ),
+                  ),
+                  validator: (value) =>
+                      widget.storyViewModel.isValidStoryDescription(value)
+                      ? null
+                      : 'Description must be at least 5 characters long',
                 ),
-                validator: (value) =>
-                    widget.storyViewModel.isValidStoryDescription(value)
-                    ? null
-                    : 'Description must be at least 5 characters long',
-              ),
-              DateTimeFormField(
-                decoration: InputDecoration(labelText: 'Enter start date'),
-                initialPickerDateTime: _startDate,
-                onChanged: (value) {
-                  _startDate = value ?? _startDate;
-                },
-              ),
-              DateTimeFormField(
-                decoration: InputDecoration(labelText: 'Enter end date'),
-                initialPickerDateTime: _endDate,
-                onChanged: (value) {
-                  _endDate = value ?? _endDate;
-                },
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  bool isValid1 = _formKey.currentState!.validate();
-                  bool isValid2 = widget.storyViewModel.isValidStoryDates(
-                    _startDate,
-                    _endDate,
-                  );
-                  debugPrint('Validation button: $isValid1 and $isValid2');
-                  final story = Story()
-                    ..name = _nameController.text
-                    ..description = _descriptionController.text
-                    ..startDate = _startDate
-                    ..endDate = _endDate;
+                DateTimeFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Enter start date',
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                      borderSide: BorderSide(color: Colors.black, width: 1),
+                    ),
+                  ),
+                  initialPickerDateTime: _startDate,
+                  onChanged: (value) {
+                    _startDate = value ?? _startDate;
+                  },
+                ),
+                DateTimeFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Enter end date',
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                      borderSide: BorderSide(color: Colors.black, width: 1),
+                    ),
+                  ),
+                  initialPickerDateTime: _endDate,
+                  onChanged: (value) {
+                    _endDate = value ?? _endDate;
+                  },
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    bool isValid1 = _formKey.currentState!.validate();
+                    bool isValid2 = widget.storyViewModel.isValidStoryDates(
+                      _startDate,
+                      _endDate,
+                    );
+                    debugPrint('Validation button: $isValid1 and $isValid2');
+                    final story = Story()
+                      ..name = _nameController.text
+                      ..description = _descriptionController.text
+                      ..startDate = _startDate
+                      ..endDate = _endDate;
 
-                  if (widget.story != null) story.id = widget.story!.id;
-                  await widget.storyViewModel.putStory(story);
-                  //Navigator.of(context).pop();
-                },
-                child: Text('Save'),
-              ),
-            ],
+                    if (widget.story != null) story.id = widget.story!.id;
+                    await widget.storyViewModel.putStory(story);
+                    //Navigator.of(context).pop();
+                  },
+                  child: Text('Save'),
+                ),
+              ],
+            ),
           ),
         ),
       ),

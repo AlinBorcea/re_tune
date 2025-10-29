@@ -44,7 +44,13 @@ class _StoryDetailsState extends State<StoryDetails> {
   late final List<Widget> _progressFormWidgets = [
     TextFormField(
       controller: _progressControllers[0],
-      decoration: InputDecoration(labelText: 'Progress made'),
+      decoration: InputDecoration(
+        labelText: 'Progress made',
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(4.0)),
+          borderSide: BorderSide(color: Colors.black, width: 1),
+        ),
+      ),
       validator: (value) => value,
     ),
     Row(
@@ -78,7 +84,13 @@ class _StoryDetailsState extends State<StoryDetails> {
   late final List<Widget> _milestoneFormWidgets = [
     TextFormField(
       controller: _milestoneControllers[0],
-      decoration: InputDecoration(labelText: 'Milestones'),
+      decoration: InputDecoration(
+        labelText: 'Milestones',
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(4.0)),
+          borderSide: BorderSide(color: Colors.black, width: 1),
+        ),
+      ),
       validator: (value) => value,
     ),
     Row(
@@ -111,7 +123,13 @@ class _StoryDetailsState extends State<StoryDetails> {
   late final List<Widget> _setbacksFormWidgets = [
     TextFormField(
       controller: _setbackControllers[0],
-      decoration: InputDecoration(labelText: 'Setbacks'),
+      decoration: InputDecoration(
+        labelText: 'Setbacks',
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(4.0)),
+          borderSide: BorderSide(color: Colors.black, width: 1),
+        ),
+      ),
       validator: (value) => value,
     ),
     Row(
@@ -231,12 +249,34 @@ class _StoryDetailsState extends State<StoryDetails> {
                       children: [
                         TextFormField(
                           controller: _nameController,
-                          decoration: InputDecoration(labelText: 'Metric Name'),
+                          decoration: InputDecoration(
+                            labelText: 'Metric Name',
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(4.0),
+                              ),
+                              borderSide: BorderSide(
+                                color: Colors.black,
+                                width: 1,
+                              ),
+                            ),
+                          ),
                           validator: (value) => value,
                         ),
                         TextFormField(
                           controller: _targetController,
-                          decoration: InputDecoration(labelText: 'Target'),
+                          decoration: InputDecoration(
+                            labelText: 'Target',
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(4.0),
+                              ),
+                              borderSide: BorderSide(
+                                color: Colors.black,
+                                width: 1,
+                              ),
+                            ),
+                          ),
                           validator: (value) => value,
                         ),
                       ],
@@ -289,17 +329,9 @@ class _StoryDetailsState extends State<StoryDetails> {
           Row(children: [Text('Name: '), Text(story.name ?? '')]),
           Row(children: [Text('Description: '), Text(story.description ?? '')]),
           Row(
-            children: [
-              Text('Start Date: '),
-              Text(story.startDate.toString()),
-            ],
+            children: [Text('Start Date: '), Text(story.startDate.toString())],
           ),
-          Row(
-            children: [
-              Text('End Date: '),
-              Text(story.endDate.toString()),
-            ],
-          ),
+          Row(children: [Text('End Date: '), Text(story.endDate.toString())]),
         ],
       ),
     );
@@ -343,7 +375,16 @@ class _StoryDetailsState extends State<StoryDetails> {
     controllers.add(TextEditingController());
     formList.insert(
       formList.length - 1,
-      TextFormField(controller: controllers.last, validator: (value) => value),
+      TextFormField(
+        controller: controllers.last,
+        validator: (value) => value,
+        decoration: InputDecoration(
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(4.0)),
+            borderSide: BorderSide(color: Colors.black, width: 1),
+          ),
+        ),
+      ),
     );
   }
 
