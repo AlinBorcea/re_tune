@@ -21,6 +21,8 @@ class _StoryViewAddEditState extends State<StoryViewAddEdit> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
+  final _startDateController = TextEditingController();
+  final _endDateController = TextEditingController();
   DateTime? _startDate, _endDate;
 
   @override
@@ -37,7 +39,9 @@ class _StoryViewAddEditState extends State<StoryViewAddEdit> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.story != null ? widget.story!.name! : 'Add Story')),
+      appBar: AppBar(
+        title: Text(widget.story != null ? widget.story!.name! : 'Add Story'),
+      ),
       body: Center(
         child: Card(
           child: Form(
@@ -77,7 +81,8 @@ class _StoryViewAddEditState extends State<StoryViewAddEdit> {
                 Row(
                   children: [
                     Expanded(
-                      child: DateTimeFormField(
+                      child: TextFormField(
+                        controller: _startDateController,
                         decoration: InputDecoration(
                           labelText: 'Enter start date',
                           enabledBorder: OutlineInputBorder(
@@ -90,15 +95,23 @@ class _StoryViewAddEditState extends State<StoryViewAddEdit> {
                             ),
                           ),
                         ),
-                        initialPickerDateTime: _startDate,
-                        onChanged: (value) {
-                          _startDate = value ?? _startDate;
+                        onTap: () async {
+                          final pickedDate = await showAdaptiveDateTimePicker(
+                            context: context,
+                            mode: DateTimeFieldPickerMode.date,
+                          );
+                          if (pickedDate != null) {
+                            _startDate = pickedDate;
+                            _startDateController.text = _startDate.toString();
+                            setState(() {});
+                          }
                         },
                       ),
                     ),
-                    SizedBox(width: 2,),
+                    SizedBox(width: 2),
                     Expanded(
-                      child: DateTimeFormField(
+                      child: TextFormField(
+                        controller: _endDateController,
                         decoration: InputDecoration(
                           labelText: 'Enter end date',
                           enabledBorder: OutlineInputBorder(
@@ -111,9 +124,17 @@ class _StoryViewAddEditState extends State<StoryViewAddEdit> {
                             ),
                           ),
                         ),
-                        initialPickerDateTime: _endDate,
-                        onChanged: (value) {
-                          _endDate = value ?? _endDate;
+                        onTap: () async {
+                          final pickedDate = await showAdaptiveDateTimePicker(
+                            context: context,
+                            mode: DateTimeFieldPickerMode.date,
+                          );
+
+                          if (pickedDate != null) {
+                            _endDate = pickedDate;
+                            _endDateController.text = _endDate.toString();
+                            setState(() {});
+                          }
                         },
                       ),
                     ),
