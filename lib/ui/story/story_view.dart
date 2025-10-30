@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:re_tune/ui/settings/time_settings.dart';
 import 'package:re_tune/ui/story/story_add_edit_view.dart';
 import 'package:re_tune/ui/story/story_details.dart';
 import 'package:re_tune/ui/story/story_view_model.dart';
@@ -52,7 +53,9 @@ class _StoryViewState extends State<StoryView> {
               return [
                 PopupMenuItem(
                   child: Text('Time Settings'),
-                  value: () => debugPrint('Time Settings'),
+                  value: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => TimeSettings()),
+                  ),
                 ),
               ];
             },
