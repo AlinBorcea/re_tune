@@ -45,7 +45,22 @@ class _StoryViewState extends State<StoryView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Stories')),
+      appBar: AppBar(
+        title: Text('Stories'),
+        actions: [
+          PopupMenuButton<void Function()>(
+            itemBuilder: (context) {
+              return [
+                PopupMenuItem(
+                  child: Text('Time Settings'),
+                  value: () => debugPrint('Time Settings'),
+                ),
+              ];
+            },
+            onSelected: (fn) => fn(),
+          ),
+        ],
+      ),
       body: _body(),
       floatingActionButton: _fab(),
     );
@@ -174,4 +189,6 @@ class _StoryViewState extends State<StoryView> {
       ),
     );
   }
+
+  void _handleThreeDotMenu(String value) {}
 }
