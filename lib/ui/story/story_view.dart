@@ -38,7 +38,6 @@ class _StoryViewState extends State<StoryView> {
   Future<void> _initData() async {
     _stories = await _viewModel.stories;
     _initDone = true;
-    debugPrint(_stories.toString());
     setState(() {});
   }
 
@@ -189,6 +188,4 @@ class _StoryViewState extends State<StoryView> {
       ),
     );
   }
-
-  void _handleThreeDotMenu(String value) {}
 }
