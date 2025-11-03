@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:re_tune/ui/settings/time_settings.dart';
 import 'package:re_tune/ui/story/story_add_edit_view.dart';
 import 'package:re_tune/ui/story/story_details.dart';
@@ -9,35 +7,26 @@ import 'package:re_tune/ui/story/story_view_model.dart';
 import '../../domain/models/story/story.dart';
 
 class StoryView extends StatefulWidget {
-  const StoryView({super.key});
+  const StoryView({super.key, required this.viewModel});
+
+  final StoryViewModel viewModel;
 
   @override
   State<StatefulWidget> createState() => _StoryViewState();
 }
 
 class _StoryViewState extends State<StoryView> {
-  late StoryViewModel _viewModel;
   late List<Story> _stories;
   bool _initDone = false;
 
   @override
   void initState() {
     super.initState();
-    _initAll();
-  }
-
-  void _initAll() async {
-    await _initIsar();
-    await _initData();
-  }
-
-  Future<void> _initIsar() async {
-    final path = await getApplicationDocumentsDirectory();
-    _viewModel = StoryViewModel(path.path);
+    _initData();
   }
 
   Future<void> _initData() async {
-    _stories = await _viewModel.stories;
+    _stories = await widget.viewModel.stories;
     _initDone = true;
     setState(() {});
   }
@@ -87,7 +76,7 @@ class _StoryViewState extends State<StoryView> {
         await Navigator.of(context).push(
           MaterialPageRoute(
             builder: (builder) =>
-                StoryViewAddEdit(storyViewModel: _viewModel, story: null),
+                StoryViewAddEdit(storyViewModel: widget.viewModel, story: null),
           ),
         );
         _initData();
@@ -125,7 +114,7 @@ class _StoryViewState extends State<StoryView> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (builder) => StoryDetails(
-                        storyViewModel: _viewModel,
+                        storyViewModel: widget.viewModel,
                         story: story,
                       ),
                     ),
@@ -154,7 +143,7 @@ class _StoryViewState extends State<StoryView> {
                   await Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (builder) => StoryViewAddEdit(
-                        storyViewModel: _viewModel,
+                        storyViewModel: widget.viewModel,
                         story: story,
                       ),
                     ),
@@ -182,7 +171,7 @@ class _StoryViewState extends State<StoryView> {
           TextButton(
             child: const Text('Yes'),
             onPressed: () async {
-              await _viewModel.deleteStory(story);
+              await widget.viewModel.deleteStory(story);
               Navigator.pop(context);
               _initData();
             },

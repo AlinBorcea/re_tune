@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:re_tune/data/repositories/story/story_repository_isar.dart';
+import 'package:re_tune/data/services/story_data_validation.dart';
 import 'package:re_tune/ui/story/story_view.dart';
+import 'package:re_tune/ui/story/story_view_model.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  final dirPath = await getApplicationDocumentsDirectory();
+  final storyRepository = StoryRepositoryIsar(dirPath.path);
+  final storyDataValidation = StoryDataValidation();
+  final viewModel = StoryViewModel(storyRepository, storyDataValidation);
+  runApp(ReTuneApp(viewModel: viewModel));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class ReTuneApp extends StatelessWidget {
+  const ReTuneApp({super.key, required this.viewModel});
+
+  final StoryViewModel viewModel;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +33,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const StoryView(),
+      home: StoryView(viewModel: viewModel),
     );
   }
 }
