@@ -1,44 +1,35 @@
-import 'package:isar/isar.dart';
+import 'package:re_tune/data/repositories/story/story_repository_isar.dart';
+import 'package:re_tune/data/services/story_data_validation.dart';
 import 'package:re_tune/domain/models/metric/metric.dart';
 import 'package:re_tune/domain/models/story/story.dart';
 
 class StoryViewModel {
-  final Isar _isar;
-  final String appDocPath;
+  final StoryRepositoryIsar storyRepository;
+  final StoryDataValidation storyDataValidation;
 
-  StoryViewModel(this.appDocPath)
-    : _isar = Isar.openSync([StorySchema, MetricSchema], directory: appDocPath);
+  StoryViewModel(this.storyRepository, this.storyDataValidation);
 
   /// StorySchema
-  Future<List<Story>> get stories => _isar.storys.where().findAll();
+  Future<List<Story>> get stories => storyRepository.stories;
 
-  Future<void> putStory(Story story) async {
-    await _isar.writeTxn(() async {
-      await _isar.storys.put(story);
-    });
-  }
+  Future<void> putStory(Story story) async =>
+      await storyRepository.putStory(story);
 
-  Future<void> deleteStory(Story story) async {
-    await _isar.writeTxn(() async {
-      await _isar.storys.delete(story.id);
-    });
-  }
+  Future<void> deleteStory(Story story) async =>
+      await storyRepository.deleteStory(story);
 
-  bool isValidStoryName(String? name) => name != null && name.isNotEmpty;
+  bool isValidStoryName(String? name) =>
+      storyDataValidation.isValidStoryName(name);
 
   bool isValidStoryDescription(String? description) =>
-      description != null && description.length > 5;
+      storyDataValidation.isValidStoryDescription(description);
 
   bool isValidStoryDates(DateTime? startDate, DateTime? endDate) =>
-      startDate != null && endDate != null && startDate.compareTo(endDate) < 0;
+      storyDataValidation.isValidStoryDates(startDate, endDate);
 
   ///MetricSchema
   Future<List<Metric>> getMetricsOfStory(int storyId) =>
-      _isar.metrics.where().storyIdEqualTo(storyId).findAll();
+      storyRepository.getMetricsOfStory(storyId);
 
-  void pushMetric(Metric metric) {
-    _isar.writeTxn(() async {
-      _isar.metrics.put(metric);
-    });
-  }
+  void pushMetric(Metric metric) => storyRepository.pushMetric(metric);
 }
