@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:re_tune/domain/models/story/story.dart';
 import 'package:re_tune/ui/calendar/calendar_view_model.dart';
 
 class CalendarView extends StatefulWidget {
@@ -11,6 +12,9 @@ class CalendarView extends StatefulWidget {
 }
 
 class _CalendarViewState extends State<CalendarView> {
+  late final List<Story> _stories;
+  bool _initDone = false;
+
   @override
   void initState() {
     super.initState();
@@ -18,49 +22,53 @@ class _CalendarViewState extends State<CalendarView> {
   }
 
   void _initData() async {
-    final data = await widget.calendarViewModel.getByStartDateInRange(
+    _stories = await widget.calendarViewModel.getByStartDateInRange(
       DateTime.now().subtract(Duration(days: 3)),
       DateTime.now().add(Duration(days: 26)),
     );
 
-    debugPrint(data.toString());
+    debugPrint(_stories.toString());
+    _initDone = true;
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('TableCalendar - Multi')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: _header(),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: _weekDays(1, 7),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: _weekDays(8, 14),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: _weekDays(15, 21),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: _weekDays(22, 28),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [Text('data')],
-            ),
-          ],
+      body: Center(child: _initDone ? _calendar() : Text('Loading')),
+    );
+  }
+
+  Widget _calendar() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: _header(),
         ),
-      ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: _weekDays(1, 7),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: _weekDays(8, 14),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: _weekDays(15, 21),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: _weekDays(22, 28),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [Text('data')],
+        ),
+      ],
     );
   }
 
@@ -79,9 +87,28 @@ class _CalendarViewState extends State<CalendarView> {
   List<Widget> _weekDays(int firstDay, int lastDay) {
     List<Widget> widgets = [];
     for (int i = firstDay; i <= lastDay; i++) {
-      widgets.add(Text('$i'));
+      final story = widget.calendarViewModel.storyListContainsDay(_stories, i);
+      final dayHasEvent = story != null;
+
+      widgets.add(
+        GestureDetector(
+          onTap: () {
+            if (dayHasEvent) {
+              _onPressWeekDay(story);
+            }
+          },
+          child: Text(
+            '$i',
+            style: TextStyle(color: dayHasEvent ? Colors.red : Colors.black),
+          ),
+        ),
+      );
     }
 
     return widgets;
+  }
+
+  void _onPressWeekDay(Story story) {
+    debugPrint(story.toString());
   }
 }
