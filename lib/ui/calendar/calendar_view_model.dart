@@ -8,4 +8,14 @@ class CalendarViewModel {
 
   Future<List<Story>> getByStartDateInRange(DateTime start, DateTime end) =>
       storyRepository.getByStartDateInRange(start, end);
+
+  Story? storyListContainsDay(List<Story> stories, int day) {
+
+    for (final story in stories) {
+      if (story.startDate == null) continue;
+      if (story.startDate!.day == day) return story;
+    }
+
+    return null;
+  }
 }
