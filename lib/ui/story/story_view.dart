@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:re_tune/ui/calendar/calendar_view_model.dart';
 import 'package:re_tune/ui/settings/time_settings.dart';
 import 'package:re_tune/ui/story/story_add_edit_view.dart';
 import 'package:re_tune/ui/story/story_details.dart';
@@ -51,7 +52,11 @@ class _StoryViewState extends State<StoryView> {
                   child: Text('Calendar'),
                   value: () => Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => CalendarView(),
+                      builder: (context) => CalendarView(
+                        calendarViewModel: CalendarViewModel(
+                          widget.viewModel.storyRepository,
+                        ),
+                      ),
                     ),
                   ),
                 ),
