@@ -1,10 +1,10 @@
-import 'package:re_tune/data/repositories/story/story_repository_isar.dart';
+import 'package:re_tune/data/repositories/story/story_repository.dart';
 import 'package:re_tune/data/services/story_data_validation.dart';
 import 'package:re_tune/domain/models/metric/metric.dart';
 import 'package:re_tune/domain/models/story/story.dart';
 
 class StoryViewModel {
-  final StoryRepositoryIsar storyRepository;
+  final StoryRepository storyRepository;
   final StoryDataValidation storyDataValidation;
 
   StoryViewModel(this.storyRepository, this.storyDataValidation);
