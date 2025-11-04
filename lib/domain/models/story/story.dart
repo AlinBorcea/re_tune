@@ -10,8 +10,10 @@ class Story {
 
   String? description;
 
+  @Index()
   DateTime? startDate;
 
+  @Index()
   DateTime? endDate;
 
   @override

@@ -14,6 +14,10 @@ class StoryRepositoryIsar implements StoryRepository {
   Future<List<Story>> get stories => _isar.storys.where().findAll();
 
   @override
+  Future<List<Story>> getByStartDateInRange(DateTime start, DateTime end) =>
+      _isar.storys.where().startDateBetween(start, end).findAll();
+
+  @override
   Future<void> putStory(Story story) async {
     await _isar.writeTxn(() async {
       await _isar.storys.put(story);

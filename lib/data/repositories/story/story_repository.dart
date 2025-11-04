@@ -5,6 +5,8 @@ abstract class StoryRepository {
   /// StorySchema
   Future<List<Story>> get stories;
 
+  Future<List<Story>> getByStartDateInRange(DateTime start, DateTime end);
+
   Future<void> putStory(Story story);
 
   Future<void> deleteStory(Story story);
