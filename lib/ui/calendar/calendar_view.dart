@@ -1,13 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:re_tune/ui/calendar/calendar_view_model.dart';
 
 class CalendarView extends StatefulWidget {
-  const CalendarView({super.key});
+  const CalendarView({super.key, required this.calendarViewModel});
+
+  final CalendarViewModel calendarViewModel;
 
   @override
   State<CalendarView> createState() => _CalendarViewState();
 }
 
 class _CalendarViewState extends State<CalendarView> {
+  @override
+  void initState() {
+    super.initState();
+    _initData();
+  }
+
+  void _initData() async {
+    final data = await widget.calendarViewModel.getByStartDateInRange(
+      DateTime.now().subtract(Duration(days: 3)),
+      DateTime.now().add(Duration(days: 26)),
+    );
+
+    debugPrint(data.toString());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
