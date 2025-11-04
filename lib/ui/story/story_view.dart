@@ -5,6 +5,7 @@ import 'package:re_tune/ui/story/story_details.dart';
 import 'package:re_tune/ui/story/story_view_model.dart';
 
 import '../../domain/models/story/story.dart';
+import '../calendar/calendar_view.dart';
 
 class StoryView extends StatefulWidget {
   const StoryView({super.key, required this.viewModel});
@@ -44,6 +45,14 @@ class _StoryViewState extends State<StoryView> {
                   child: Text('Time Settings'),
                   value: () => Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) => TimeSettings()),
+                  ),
+                ),
+                PopupMenuItem(
+                  child: Text('Calendar'),
+                  value: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => CalendarView(),
+                    ),
                   ),
                 ),
               ];
