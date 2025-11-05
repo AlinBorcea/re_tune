@@ -44,32 +44,7 @@ class _CalendarViewState extends State<CalendarView> {
   Widget _calendar() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: _header(),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: _weekDays(1, 7),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: _weekDays(8, 14),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: _weekDays(15, 21),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: _weekDays(22, 28),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [Text('data')],
-        ),
-      ],
+      children: _calendarContent(),
     );
   }
 
@@ -83,6 +58,41 @@ class _CalendarViewState extends State<CalendarView> {
       Text('Saturday'),
       Text('Sunday'),
     ];
+  }
+
+  List<Widget> _calendarContent() {
+    List<Widget> rows = [];
+
+    final currentDate = DateTime.now();
+    final firstDayOfMonth = DateTime.utc(
+      currentDate.year,
+      currentDate.month,
+      1,
+    );
+    final lastDay = firstDayOfMonth.add(
+      Duration(days: (7 - firstDayOfMonth.weekday)),
+    );
+    final firstDay = lastDay.subtract(Duration(days: 6));
+
+    debugPrint('first day ${firstDay.day} - last day ${lastDay.day}');
+    debugPrint('difference = ${lastDay.difference(firstDay)}');
+    rows.add(
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: _header(),
+      ),
+    );
+
+    for (int i = lastDay.day - 6, c = 1; c <= 5 ; i += 7, c++) {
+      rows.add(
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: _weekDays(i, i + 6),
+        ),
+      );
+    }
+
+    return rows;
   }
 
   List<Widget> _weekDays(int firstDay, int lastDay) {
