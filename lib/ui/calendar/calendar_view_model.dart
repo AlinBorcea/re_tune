@@ -18,4 +18,15 @@ class CalendarViewModel {
 
     return null;
   }
+
+  List<Story> storiesOfDay(List<Story> stories, int day) {
+    List<Story> dayStories = [];
+    for (final story in stories) {
+      if (story.startDate == null) continue;
+      if (story.startDate!.day == day) dayStories.add(story);
+    }
+
+    return dayStories;
+  }
+
 }

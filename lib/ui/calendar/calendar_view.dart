@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:re_tune/domain/models/story/story.dart';
+import 'package:re_tune/ui/alarm/alarm_view.dart';
 import 'package:re_tune/ui/calendar/calendar_view_model.dart';
 
 class CalendarView extends StatefulWidget {
@@ -93,8 +94,14 @@ class _CalendarViewState extends State<CalendarView> {
       widgets.add(
         GestureDetector(
           onTap: () {
-            if (dayHasEvent) {
-              _onPressWeekDay(story);
+            final stories = widget.calendarViewModel.storiesOfDay(_stories, i);
+
+            if (stories.length == 1) {
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (context) => AlarmView()));
+            } else if (stories.length > 1) {
+              _showSelectStoryDialog(stories);
             }
           },
           child: Text(
@@ -108,7 +115,33 @@ class _CalendarViewState extends State<CalendarView> {
     return widgets;
   }
 
-  void _onPressWeekDay(Story story) {
-    debugPrint(story.toString());
+  void _showSelectStoryDialog(List<Story> stories) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Pick Story'),
+        content: SizedBox(
+          height: 200,
+          width: 200,
+          child: ListView.builder(
+            itemCount: stories.length,
+            itemBuilder: (context, index) => TextButton(
+              onPressed: () {
+                Navigator.of(
+                  context,
+                ).push(MaterialPageRoute(builder: (context) => AlarmView()));
+              },
+              child: Text('${stories[index].name}'),
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            child: const Text('Cancel'),
+            onPressed: () => Navigator.pop(context, 'Cancel'),
+          ),
+        ],
+      ),
+    );
   }
 }
