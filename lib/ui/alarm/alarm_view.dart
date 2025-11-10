@@ -22,6 +22,8 @@ class _AlarmViewState extends State<AlarmView> {
     ),
   ];
 
+  final List<TextEditingController> _alarmNameControllers = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,6 +35,7 @@ class _AlarmViewState extends State<AlarmView> {
   void _removeAlarm() {
     if (_body.length <= 1) return;
     _body.removeAt(_body.length-2);
+    _alarmNameControllers.removeLast();
     setState(() {});
   }
 
@@ -42,11 +45,14 @@ class _AlarmViewState extends State<AlarmView> {
   }
 
   Widget _alarmItem() {
+    final controller = TextEditingController();
+    _alarmNameControllers.add(controller);
     return Card(
       child: Row(
         children: [
           Expanded(
             child: TextFormField(
+              controller: controller,
               decoration: InputDecoration(
                 labelText: 'Alarm Name',
                 hintText: 'Set Date!',
@@ -60,7 +66,7 @@ class _AlarmViewState extends State<AlarmView> {
                   context: context,
                   mode: DateTimeFieldPickerMode.date,
                 );
-                debugPrint(pickedDate.toString());
+                controller.text = pickedDate.toString();
               },
             ),
           ),
