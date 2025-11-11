@@ -1,8 +1,12 @@
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 
+import '../../domain/models/story/story.dart';
+
 class AlarmView extends StatefulWidget {
-  const AlarmView({super.key});
+  const AlarmView({super.key, required this.story});
+
+  final Story story;
 
   @override
   State<StatefulWidget> createState() => _AlarmViewState();

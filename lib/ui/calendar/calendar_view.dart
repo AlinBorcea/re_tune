@@ -83,7 +83,7 @@ class _CalendarViewState extends State<CalendarView> {
       ),
     );
 
-    for (int i = lastDay.day - 6, c = 1; c <= 5 ; i += 7, c++) {
+    for (int i = lastDay.day - 6, c = 1; c <= 5; i += 7, c++) {
       rows.add(
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -107,9 +107,11 @@ class _CalendarViewState extends State<CalendarView> {
             final stories = widget.calendarViewModel.storiesOfDay(_stories, i);
 
             if (stories.length == 1) {
-              Navigator.of(
-                context,
-              ).push(MaterialPageRoute(builder: (context) => AlarmView()));
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => AlarmView(story: stories.last),
+                ),
+              );
             } else if (stories.length > 1) {
               _showSelectStoryDialog(stories);
             }
@@ -137,9 +139,11 @@ class _CalendarViewState extends State<CalendarView> {
             itemCount: stories.length,
             itemBuilder: (context, index) => TextButton(
               onPressed: () {
-                Navigator.of(
-                  context,
-                ).push(MaterialPageRoute(builder: (context) => AlarmView()));
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => AlarmView(story: stories[index]),
+                  ),
+                );
               },
               child: Text('${stories[index].name}'),
             ),
