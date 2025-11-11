@@ -106,25 +106,39 @@ class _AlarmViewState extends State<AlarmView> {
               ),
             ),
           ),
-          Expanded(
-            child: Switch(
-              value: toggleValue,
-              onChanged: (bool on) {
-                setState(() {
-                  toggleValue = on;
-                });
-
-                if (on) {
-                  debugPrint('Saving alarm ${titleController.text}');
-                  return;
-                }
-
-                debugPrint('Turning off alarm ${titleController.text}');
-              },
-            ),
-          ),
+          Expanded(child: MySwitch()),
         ],
       ),
     );
   }
+}
+
+class MySwitch extends StatefulWidget {
+  const MySwitch({super.key});
+
+  @override
+  State<StatefulWidget> createState() => MySwitchState();
+}
+
+class MySwitchState extends State<MySwitch> {
+  final titleController = TextEditingController();
+  final dateController = TextEditingController();
+  var toggleValue = false;
+
+  @override
+  Widget build(BuildContext context) => Switch(
+    value: toggleValue,
+    onChanged: (bool on) {
+      setState(() {
+        toggleValue = on;
+      });
+
+      if (on) {
+        debugPrint('Saving alarm ${titleController.text}');
+        return;
+      }
+
+      debugPrint('Turning off alarm ${titleController.text}');
+    },
+  );
 }
