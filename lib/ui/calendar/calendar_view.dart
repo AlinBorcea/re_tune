@@ -28,7 +28,6 @@ class _CalendarViewState extends State<CalendarView> {
       DateTime.now().add(Duration(days: 26)),
     );
 
-    debugPrint(_stories.toString());
     _initDone = true;
     setState(() {});
   }
@@ -74,8 +73,6 @@ class _CalendarViewState extends State<CalendarView> {
     );
     final firstDay = lastDay.subtract(Duration(days: 6));
 
-    debugPrint('first day ${firstDay.day} - last day ${lastDay.day}');
-    debugPrint('difference = ${lastDay.difference(firstDay)}');
     rows.add(
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
