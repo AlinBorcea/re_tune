@@ -13,7 +13,10 @@ class _AlarmViewState extends State<AlarmView> {
     Row(
       children: [
         Expanded(
-          child: TextButton(onPressed: () => _removeAlarm(), child: Text('Remove')),
+          child: TextButton(
+            onPressed: () => _removeAlarm(),
+            child: Text('Remove'),
+          ),
         ),
         Expanded(
           child: TextButton(onPressed: () => _addAlarm(), child: Text('Add')),
@@ -23,6 +26,8 @@ class _AlarmViewState extends State<AlarmView> {
   ];
 
   final List<TextEditingController> _alarmNameControllers = [];
+  final List<TextEditingController> _alarmDateControllers = [];
+  final List<bool> _alarmToggleValues = [];
 
   @override
   Widget build(BuildContext context) {
@@ -34,44 +39,85 @@ class _AlarmViewState extends State<AlarmView> {
 
   void _removeAlarm() {
     if (_body.length <= 1) return;
-    _body.removeAt(_body.length-2);
+    _body.removeAt(_body.length - 2);
     _alarmNameControllers.removeLast();
     setState(() {});
   }
 
   void _addAlarm() {
-    _body.insert(_body.length-1, _alarmItem());
+    _body.insert(_body.length - 1, _alarmItem());
     setState(() {});
   }
 
   Widget _alarmItem() {
-    final controller = TextEditingController();
-    _alarmNameControllers.add(controller);
+    final titleController = TextEditingController();
+    final dateController = TextEditingController();
+    var toggleValue = false;
+
+    _alarmNameControllers.add(dateController);
+    _alarmDateControllers.add(dateController);
+    _alarmToggleValues.add(toggleValue);
+
     return Card(
       child: Row(
         children: [
           Expanded(
-            child: TextFormField(
-              controller: controller,
-              decoration: InputDecoration(
-                labelText: 'Alarm Name',
-                hintText: 'Set Date!',
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(4.0)),
-                  borderSide: BorderSide(color: Colors.black, width: 1),
-                ),
+            child: SizedBox(
+              height: 80,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: titleController,
+                      decoration: InputDecoration(
+                        labelText: 'Alarm Name',
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                          borderSide: BorderSide(color: Colors.black, width: 1),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: TextFormField(
+                      controller: dateController,
+                      decoration: InputDecoration(
+                        labelText: 'Alarm Date',
+                        hintText: 'Set Date!',
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                          borderSide: BorderSide(color: Colors.black, width: 1),
+                        ),
+                      ),
+                      onTap: () async {
+                        final pickedDate = await showAdaptiveDateTimePicker(
+                          context: context,
+                          mode: DateTimeFieldPickerMode.date,
+                        );
+                        dateController.text = pickedDate.toString();
+                      },
+                    ),
+                  ),
+                ],
               ),
-              onTap: () async {
-                final pickedDate = await showAdaptiveDateTimePicker(
-                  context: context,
-                  mode: DateTimeFieldPickerMode.date,
-                );
-                controller.text = pickedDate.toString();
-              },
             ),
           ),
           Expanded(
-            child: TextButton(onPressed: () {}, child: Text('Toggle')),
+            child: Switch(
+              value: toggleValue,
+              onChanged: (bool on) {
+                setState(() {
+                  toggleValue = on;
+                });
+
+                if (on) {
+                  debugPrint('Saving alarm ${titleController.text}');
+                  return;
+                }
+
+                debugPrint('Turning off alarm ${titleController.text}');
+              },
+            ),
           ),
         ],
       ),
