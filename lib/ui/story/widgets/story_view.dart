@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:re_tune/ui/calendar/calendar_view_model.dart';
-import 'package:re_tune/ui/settings/time_settings.dart';
+
 import 'package:re_tune/ui/story/widgets/story_add_edit_view.dart';
-import 'package:re_tune/ui/story/widgets/story_details.dart';
+
+import 'package:re_tune/ui/story/widgets/story_view_popup_menu.dart';
+import 'package:re_tune/ui/story/widgets/story_list_item.dart';
+
 import 'package:re_tune/ui/story/view_models/story_view_model.dart';
 
 import '../../../domain/models/story/story.dart';
-import '../../calendar/calendar_view.dart';
 
 class StoryView extends StatefulWidget {
   const StoryView({super.key, required this.viewModel});
@@ -38,33 +39,7 @@ class _StoryViewState extends State<StoryView> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Stories'),
-        actions: [
-          PopupMenuButton<void Function()>(
-            itemBuilder: (context) {
-              return [
-                PopupMenuItem(
-                  child: Text('Time Settings'),
-                  value: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => TimeSettings()),
-                  ),
-                ),
-                PopupMenuItem(
-                  child: Text('Calendar'),
-                  value: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => CalendarView(
-                        calendarViewModel: CalendarViewModel(
-                          widget.viewModel.storyRepository,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ];
-            },
-            onSelected: (fn) => fn(),
-          ),
-        ],
+        actions: [StoryViewPopupMenu(storyViewModel: widget.viewModel)],
       ),
       body: _body(),
       floatingActionButton: _fab(),
@@ -77,7 +52,12 @@ class _StoryViewState extends State<StoryView> {
             child: ListView.builder(
               padding: EdgeInsets.all(2.0),
               itemCount: _stories.length,
-              itemBuilder: (context, index) => _storyItem(_stories[index]),
+              itemBuilder: (context, index) => StoryListItem(
+                storyViewModel: widget.viewModel,
+                story: _stories[index],
+                initData: _initData,
+                showAlertDialogDeleteStory: _showAlertDialogDeleteStory,
+              ),
             ),
           )
         : Text("Init not done!");
@@ -95,80 +75,6 @@ class _StoryViewState extends State<StoryView> {
         );
         _initData();
       },
-    );
-  }
-
-  Widget _storyItem(Story story) {
-    return Card(
-      child: Column(
-        children: [
-          ExpansionTile(
-            title: Text(story.name ?? 'Nothing'),
-            leading: Icon(Icons.note),
-            children: [
-              ListTile(
-                title: Text(
-                  story.description ?? 'Description of the story goes here.',
-                ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              TextButton(
-                child: Row(
-                  children: [
-                    Icon(Icons.info, size: 16, color: Colors.blue),
-                    SizedBox(width: 2),
-                    Text('Details'),
-                  ],
-                ),
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (builder) => StoryDetails(
-                        storyViewModel: widget.viewModel,
-                        story: story,
-                      ),
-                    ),
-                  );
-                },
-              ),
-              TextButton(
-                child: Row(
-                  children: [
-                    Icon(Icons.delete, size: 16, color: Colors.red),
-                    SizedBox(width: 2),
-                    Text('Delete'),
-                  ],
-                ),
-                onPressed: () => _showAlertDialogDeleteStory(story),
-              ),
-              TextButton(
-                child: Row(
-                  children: [
-                    Icon(Icons.edit, size: 16, color: Colors.amber),
-                    SizedBox(width: 2),
-                    Text('Edit'),
-                  ],
-                ),
-                onPressed: () async {
-                  await Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (builder) => StoryViewAddEdit(
-                        storyViewModel: widget.viewModel,
-                        story: story,
-                      ),
-                    ),
-                  );
-                  _initData();
-                },
-              ),
-            ],
-          ),
-        ],
-      ),
     );
   }
 
