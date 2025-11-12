@@ -44,6 +44,7 @@ class _StoryViewAddEditState extends State<StoryViewAddEdit> {
       ),
       body: Center(
         child: Card(
+          margin: EdgeInsets.all(8),
           child: Form(
             key: _formKey,
             child: Column(
@@ -63,6 +64,7 @@ class _StoryViewAddEditState extends State<StoryViewAddEdit> {
                       ? null
                       : 'Name is not valid!',
                 ),
+                SizedBox(height: 10,),
                 TextFormField(
                   controller: _descriptionController,
                   decoration: InputDecoration(
@@ -78,6 +80,7 @@ class _StoryViewAddEditState extends State<StoryViewAddEdit> {
                       ? null
                       : 'Description must be at least 5 characters long',
                 ),
+                SizedBox(height: 10,),
                 Row(
                   children: [
                     Expanded(
@@ -108,7 +111,7 @@ class _StoryViewAddEditState extends State<StoryViewAddEdit> {
                         },
                       ),
                     ),
-                    SizedBox(width: 2),
+                    SizedBox(width: 4),
                     Expanded(
                       child: TextFormField(
                         controller: _endDateController,
@@ -140,6 +143,7 @@ class _StoryViewAddEditState extends State<StoryViewAddEdit> {
                     ),
                   ],
                 ),
+                SizedBox(height: 4,),
                 ElevatedButton(
                   onPressed: () async {
                     bool isValid1 = _formKey.currentState!.validate();
