@@ -6,7 +6,7 @@ class AlarmRepositoryIsar implements AlarmRepository {
   final Isar _isar;
 
   AlarmRepositoryIsar(String path)
-    : _isar = Isar.openSync([AlarmSchema], directory: path);
+    : _isar = Isar.getInstance()!;
 
   @override
   Future<List<Alarm>> getAlarmOfStory(int storyId) =>
@@ -17,6 +17,7 @@ class AlarmRepositoryIsar implements AlarmRepository {
     await _isar.writeTxn(() async {
       await _isar.alarms.put(alarm);
     });
+    Isar.getInstance();
   }
 
   @override

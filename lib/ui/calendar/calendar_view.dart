@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:re_tune/data/repositories/alarm/alarm_repository_isar.dart';
 import 'package:re_tune/domain/models/story/story.dart';
 import 'package:re_tune/ui/alarm/alarm_view.dart';
+import 'package:re_tune/ui/alarm/alarm_view_model.dart';
 import 'package:re_tune/ui/calendar/calendar_view_model.dart';
 
 class CalendarView extends StatefulWidget {
@@ -100,13 +103,19 @@ class _CalendarViewState extends State<CalendarView> {
 
       widgets.add(
         GestureDetector(
-          onTap: () {
+          onTap: () async {
             final stories = widget.calendarViewModel.storiesOfDay(_stories, i);
 
             if (stories.length == 1) {
+              final dirPath = await getApplicationDocumentsDirectory();
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => AlarmView(story: stories.last),
+                  builder: (context) => AlarmView(
+                    story: stories.last,
+                    alarmViewModel: AlarmViewModel(
+                      AlarmRepositoryIsar(dirPath.path),
+                    ),
+                  ),
                 ),
               );
             } else if (stories.length > 1) {
@@ -135,10 +144,16 @@ class _CalendarViewState extends State<CalendarView> {
           child: ListView.builder(
             itemCount: stories.length,
             itemBuilder: (context, index) => TextButton(
-              onPressed: () {
+              onPressed: () async {
+                final dirPath = await getApplicationDocumentsDirectory();
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => AlarmView(story: stories[index]),
+                    builder: (context) => AlarmView(
+                      story: stories[index],
+                      alarmViewModel: AlarmViewModel(
+                        AlarmRepositoryIsar(dirPath.path),
+                      ),
+                    ),
                   ),
                 );
               },

@@ -1,12 +1,19 @@
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
+import 'package:re_tune/domain/models/alarm/alarm.dart';
+import 'package:re_tune/ui/alarm/alarm_view_model.dart';
 
 import '../../domain/models/story/story.dart';
 
 class AlarmView extends StatefulWidget {
-  const AlarmView({super.key, required this.story});
+  const AlarmView({
+    super.key,
+    required this.story,
+    required this.alarmViewModel,
+  });
 
   final Story story;
+  final AlarmViewModel alarmViewModel;
 
   @override
   State<StatefulWidget> createState() => _AlarmViewState();
@@ -57,6 +64,7 @@ class _AlarmViewState extends State<AlarmView> {
     final titleController = TextEditingController();
     final dateController = TextEditingController();
     var toggleValue = false;
+    DateTime? pickedDate;
 
     _alarmNameControllers.add(dateController);
     _alarmDateControllers.add(dateController);
@@ -94,7 +102,7 @@ class _AlarmViewState extends State<AlarmView> {
                         ),
                       ),
                       onTap: () async {
-                        final pickedDate = await showAdaptiveDateTimePicker(
+                        pickedDate = await showAdaptiveDateTimePicker(
                           context: context,
                           mode: DateTimeFieldPickerMode.date,
                         );
@@ -110,6 +118,13 @@ class _AlarmViewState extends State<AlarmView> {
         ],
       ),
     );
+  }
+
+  void _saveAlarm(String name, DateTime date) async {
+    final alarm = Alarm()
+      ..name = name
+      ..date = date
+      ..storyId = widget.story.id;
   }
 }
 
