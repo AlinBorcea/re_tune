@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:re_tune/domain/models/metric/metric.dart';
-import 'package:re_tune/ui/story/story_view_model.dart';
+import 'package:re_tune/ui/story/view_models/story_view_model.dart';
 
-import '../../domain/models/story/story.dart';
+import '../../../domain/models/story/story.dart';
 
 class StoryDetails extends StatefulWidget {
   const StoryDetails({

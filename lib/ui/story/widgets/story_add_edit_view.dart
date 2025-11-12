@@ -1,7 +1,7 @@
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:re_tune/domain/models/story/story.dart';
-import 'package:re_tune/ui/story/story_view_model.dart';
+import 'package:re_tune/ui/story/view_models/story_view_model.dart';
 
 class StoryViewAddEdit extends StatefulWidget {
   const StoryViewAddEdit({

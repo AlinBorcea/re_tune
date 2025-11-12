@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:re_tune/ui/calendar/calendar_view_model.dart';
 import 'package:re_tune/ui/settings/time_settings.dart';
-import 'package:re_tune/ui/story/story_add_edit_view.dart';
-import 'package:re_tune/ui/story/story_details.dart';
-import 'package:re_tune/ui/story/story_view_model.dart';
+import 'package:re_tune/ui/story/widgets/story_add_edit_view.dart';
+import 'package:re_tune/ui/story/widgets/story_details.dart';
+import 'package:re_tune/ui/story/view_models/story_view_model.dart';
 
-import '../../domain/models/story/story.dart';
-import '../calendar/calendar_view.dart';
+import '../../../domain/models/story/story.dart';
+import '../../calendar/calendar_view.dart';
 
 class StoryView extends StatefulWidget {
   const StoryView({super.key, required this.viewModel});

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:re_tune/data/repositories/story/story_repository_isar.dart';
 import 'package:re_tune/data/services/story_data_validation.dart';
-import 'package:re_tune/ui/story/story_view.dart';
-import 'package:re_tune/ui/story/story_view_model.dart';
+import 'package:re_tune/ui/story/widgets/story_view.dart';
+import 'package:re_tune/ui/story/view_models/story_view_model.dart';
 
 void main() async {
   final dirPath = await getApplicationDocumentsDirectory();
