@@ -4,7 +4,7 @@ import 'package:re_tune/data/repositories/alarm/alarm_repository_isar.dart';
 import 'package:re_tune/domain/models/story/story.dart';
 import 'package:re_tune/ui/alarm/alarm_view.dart';
 import 'package:re_tune/ui/alarm/alarm_view_model.dart';
-import 'package:re_tune/ui/calendar/calendar_view_model.dart';
+import 'package:re_tune/ui/calendar/view_models/calendar_view_model.dart';
 
 class CalendarView extends StatefulWidget {
   const CalendarView({super.key, required this.calendarViewModel});
