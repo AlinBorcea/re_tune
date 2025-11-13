@@ -5,6 +5,8 @@ import 'package:re_tune/domain/models/story/story.dart';
 import 'package:re_tune/ui/alarm/alarm_view.dart';
 import 'package:re_tune/ui/alarm/alarm_view_model.dart';
 import 'package:re_tune/ui/calendar/view_models/calendar_view_model.dart';
+import 'package:re_tune/ui/calendar/widgets/calendar_content.dart';
+import 'package:re_tune/ui/calendar/widgets/calendar_header.dart';
 
 class CalendarView extends StatefulWidget {
   const CalendarView({super.key, required this.calendarViewModel});
@@ -39,98 +41,17 @@ class _CalendarViewState extends State<CalendarView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('TableCalendar - Multi')),
-      body: Center(child: _initDone ? _calendar() : Text('Loading')),
-    );
-  }
-
-  Widget _calendar() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: _calendarContent(),
-    );
-  }
-
-  List<Widget> _header() {
-    return [
-      Text('Monday'),
-      Text('Tuesday'),
-      Text('Wednesday'),
-      Text('Thursday'),
-      Text('Friday'),
-      Text('Saturday'),
-      Text('Sunday'),
-    ];
-  }
-
-  List<Widget> _calendarContent() {
-    List<Widget> rows = [];
-
-    final currentDate = DateTime.now();
-    final firstDayOfMonth = DateTime.utc(
-      currentDate.year,
-      currentDate.month,
-      1,
-    );
-    final lastDay = firstDayOfMonth.add(
-      Duration(days: (7 - firstDayOfMonth.weekday)),
-    );
-    final firstDay = lastDay.subtract(Duration(days: 6));
-
-    rows.add(
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: _header(),
+      body: Center(
+        child: _initDone
+            ? CalendarContent(
+                stories: _stories,
+                calendarHeader: CalendarHeader(),
+                calendarViewModel: widget.calendarViewModel,
+                showSelectStoryDialog: _showSelectStoryDialog,
+              )
+            : Text('Loading'),
       ),
     );
-
-    for (int i = lastDay.day - 6, c = 1; c <= 5; i += 7, c++) {
-      rows.add(
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: _weekDays(i, i + 6),
-        ),
-      );
-    }
-
-    return rows;
-  }
-
-  List<Widget> _weekDays(int firstDay, int lastDay) {
-    List<Widget> widgets = [];
-    for (int i = firstDay; i <= lastDay; i++) {
-      final story = widget.calendarViewModel.storyListContainsDay(_stories, i);
-      final dayHasEvent = story != null;
-
-      widgets.add(
-        GestureDetector(
-          onTap: () async {
-            final stories = widget.calendarViewModel.storiesOfDay(_stories, i);
-
-            if (stories.length == 1) {
-              final dirPath = await getApplicationDocumentsDirectory();
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => AlarmView(
-                    story: stories.last,
-                    alarmViewModel: AlarmViewModel(
-                      AlarmRepositoryIsar(dirPath.path),
-                    ),
-                  ),
-                ),
-              );
-            } else if (stories.length > 1) {
-              _showSelectStoryDialog(stories);
-            }
-          },
-          child: Text(
-            '$i',
-            style: TextStyle(color: dayHasEvent ? Colors.red : Colors.black),
-          ),
-        ),
-      );
-    }
-
-    return widgets;
   }
 
   void _showSelectStoryDialog(List<Story> stories) {
