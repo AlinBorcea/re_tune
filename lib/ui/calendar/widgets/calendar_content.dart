@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:re_tune/data/services/date_service.dart';
 import 'package:re_tune/domain/models/story/story.dart';
 import 'package:re_tune/ui/calendar/view_models/calendar_view_model.dart';
 import 'package:re_tune/ui/calendar/widgets/calendar_header.dart';
@@ -30,18 +31,10 @@ class CalendarContent extends StatefulWidget {
 class _CalendarContentState extends State<CalendarContent> {
   @override
   Widget build(BuildContext context) {
-    final currentDate = DateTime.now();
-    final firstDayOfMonth = DateTime.utc(
-      currentDate.year,
-      currentDate.month,
-      1,
-    );
-    final lastDay = firstDayOfMonth.add(
-      Duration(days: (7 - firstDayOfMonth.weekday)),
-    );
+    final dateService = DateService(DateTime.now());
 
     List<Widget> rows = [widget.calendarHeader];
-    for (int i = lastDay.day - 6, c = 1; c <= 5; i += 7, c++) {
+    for (int i = dateService.firstDayOnCalendar; i < dateService.lastDayOnCalendar; i += 7) {
       rows.add(
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
