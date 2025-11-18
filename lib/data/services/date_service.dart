@@ -1,6 +1,7 @@
 class DateService {
   late final int firstDayOnCalendar;
   late final int lastDayOnCalendar;
+  late final int lastDayOfMonth;
 
   DateService(DateTime currentDate) {
     final firstDayOfMonth = DateTime.utc(
@@ -21,5 +22,6 @@ class DateService {
 
     firstDayOnCalendar = lastDayOfFirstWeek.day - 6;
     lastDayOnCalendar = lastDayOfMonth.day + (7 - lastDayOfMonth.weekday);
+    this.lastDayOfMonth = lastDayOfMonth.day;
   }
 }
