@@ -38,7 +38,7 @@ class _CalendarContentState extends State<CalendarContent> {
       rows.add(
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: _weekDays(i, i + 6),
+          children: _weekDays(i, i + 6, dateService.lastDayOfMonth),
         ),
       );
     }
@@ -46,7 +46,7 @@ class _CalendarContentState extends State<CalendarContent> {
     return Column(children: rows);
   }
 
-  List<Widget> _weekDays(int firstDay, int lastDay) {
+  List<Widget> _weekDays(int firstDay, int lastDay, int lastDayOfMonth) {
     List<Widget> widgets = [];
     for (int i = firstDay; i <= lastDay; i++) {
       final story = widget.calendarViewModel.storyListContainsDay(
@@ -56,8 +56,8 @@ class _CalendarContentState extends State<CalendarContent> {
       final dayHasEvent = story != null;
 
       widgets.add(
-        GestureDetector(
-          onTap: () async {
+        OutlinedButton(
+          onPressed: () async {
             final stories = widget.calendarViewModel.storiesOfDay(
               widget.stories,
               i,
@@ -80,8 +80,8 @@ class _CalendarContentState extends State<CalendarContent> {
             }
           },
           child: Text(
-            '$i',
-            style: TextStyle(color: dayHasEvent ? Colors.red : Colors.black),
+            i >= 1 && i <= lastDayOfMonth ? '$i' : '',
+            style: TextStyle(color: dayHasEvent ? Colors.red : Colors.black, fontSize: 20),
           ),
         ),
       );
