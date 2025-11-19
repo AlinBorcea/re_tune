@@ -7,7 +7,7 @@ class StoryRepositoryIsar implements StoryRepository {
   final Isar _isar;
 
   StoryRepositoryIsar(String dirPath)
-    : _isar = Isar.openSync([StorySchema, MetricSchema], directory: dirPath);
+    : _isar = Isar.getInstance()!;
 
   /// StorySchema
   @override
