@@ -34,16 +34,27 @@ class _CalendarContentState extends State<CalendarContent> {
     final dateService = DateService(DateTime.now());
 
     List<Widget> rows = [widget.calendarHeader];
-    for (int i = dateService.firstDayOnCalendar; i < dateService.lastDayOnCalendar; i += 7) {
+    for (
+      int i = dateService.firstDayOnCalendar;
+      i < dateService.lastDayOnCalendar;
+      i += 7
+    ) {
       rows.add(
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          spacing: 4.0,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: _weekDays(i, i + 6, dateService.lastDayOfMonth),
         ),
       );
     }
 
-    return Column(children: rows);
+    return Center(
+      child: Column(
+        spacing: 4,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: rows,
+      ),
+    );
   }
 
   List<Widget> _weekDays(int firstDay, int lastDay, int lastDayOfMonth) {
@@ -56,32 +67,39 @@ class _CalendarContentState extends State<CalendarContent> {
       final dayHasEvent = story != null;
 
       widgets.add(
-        OutlinedButton(
-          onPressed: () async {
-            final stories = widget.calendarViewModel.storiesOfDay(
-              widget.stories,
-              i,
-            );
+        SizedBox(
+          width: 80,
+          height: 80,
+          child: OutlinedButton(
+            onPressed: () async {
+              final stories = widget.calendarViewModel.storiesOfDay(
+                widget.stories,
+                i,
+              );
 
-            if (stories.length == 1) {
-              final dirPath = await getApplicationDocumentsDirectory();
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => AlarmView(
-                    story: stories.last,
-                    alarmViewModel: AlarmViewModel(
-                      AlarmRepositoryIsar(dirPath.path),
+              if (stories.length == 1) {
+                final dirPath = await getApplicationDocumentsDirectory();
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => AlarmView(
+                      story: stories.last,
+                      alarmViewModel: AlarmViewModel(
+                        AlarmRepositoryIsar(dirPath.path),
+                      ),
                     ),
                   ),
-                ),
-              );
-            } else if (stories.length > 1) {
-              widget.showSelectStoryDialog(stories);
-            }
-          },
-          child: Text(
-            i >= 1 && i <= lastDayOfMonth ? '$i' : '',
-            style: TextStyle(color: dayHasEvent ? Colors.red : Colors.black, fontSize: 20),
+                );
+              } else if (stories.length > 1) {
+                widget.showSelectStoryDialog(stories);
+              }
+            },
+            child: Text(
+              i >= 1 && i <= lastDayOfMonth ? '$i' : '',
+              style: TextStyle(
+                color: dayHasEvent ? Colors.red : Colors.black,
+                fontSize: 20,
+              ),
+            ),
           ),
         ),
       );

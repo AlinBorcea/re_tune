@@ -6,15 +6,15 @@ class CalendarHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text('Monday'),
-        Text('Tuesday'),
-        Text('Wednesday'),
-        Text('Thursday'),
-        Text('Friday'),
-        Text('Saturday'),
-        Text('Sunday'),
+        SizedBox(width: 80, child: Text(' Monday')),
+        SizedBox(width: 80, child: Text(' Tuesday')),
+        SizedBox(width: 80, child: Text('Wednesday')),
+        SizedBox(width: 80, child: Text('  Thursday')),
+        SizedBox(width: 80, child: Text('      Friday')),
+        SizedBox(width: 80, child: Text('    Saturday')),
+        SizedBox(width: 80, child: Text('       Sunday')),
       ],
     );
   }
