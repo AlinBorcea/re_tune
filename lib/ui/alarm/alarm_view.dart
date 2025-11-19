@@ -114,7 +114,14 @@ class _AlarmViewState extends State<AlarmView> {
               ),
             ),
           ),
-          Expanded(child: MySwitch()),
+          Expanded(
+            child: MySwitch(
+              saveAlarmCallback: () => _saveAlarm(
+                titleController.text,
+                pickedDate ?? DateTime.now(),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -125,19 +132,21 @@ class _AlarmViewState extends State<AlarmView> {
       ..name = name
       ..date = date
       ..storyId = widget.story.id;
+
+    widget.alarmViewModel.addAlarm(alarm);
   }
 }
 
 class MySwitch extends StatefulWidget {
-  const MySwitch({super.key});
+  const MySwitch({super.key, required this.saveAlarmCallback});
+
+  final Function saveAlarmCallback;
 
   @override
   State<StatefulWidget> createState() => MySwitchState();
 }
 
 class MySwitchState extends State<MySwitch> {
-  final titleController = TextEditingController();
-  final dateController = TextEditingController();
   var toggleValue = false;
 
   @override
@@ -149,11 +158,9 @@ class MySwitchState extends State<MySwitch> {
       });
 
       if (on) {
-        debugPrint('Saving alarm ${titleController.text}');
+        widget.saveAlarmCallback();
         return;
       }
-
-      debugPrint('Turning off alarm ${titleController.text}');
     },
   );
 }
