@@ -40,7 +40,7 @@ class _CalendarViewState extends State<CalendarView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('TableCalendar - Multi')),
+      appBar: AppBar(title: const Text('Story Calendar')),
       body: Center(
         child: _initDone
             ? CalendarContent(
