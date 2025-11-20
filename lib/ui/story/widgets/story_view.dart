@@ -41,40 +41,36 @@ class _StoryViewState extends State<StoryView> {
         title: Text('Stories'),
         actions: [StoryViewPopupMenu(storyViewModel: widget.viewModel)],
       ),
-      body: _body(),
-      floatingActionButton: _fab(),
-    );
-  }
 
-  Widget _body() {
-    return _initDone
-        ? Card(
-            child: ListView.builder(
-              padding: EdgeInsets.all(2.0),
-              itemCount: _stories.length,
-              itemBuilder: (context, index) => StoryListItem(
+      body: _initDone
+          ? Card(
+              child: ListView.builder(
+                padding: EdgeInsets.all(2.0),
+                itemCount: _stories.length,
+                itemBuilder: (context, index) => StoryListItem(
+                  storyViewModel: widget.viewModel,
+                  story: _stories[index],
+                  initData: _initData,
+                  showAlertDialogDeleteStory: _showAlertDialogDeleteStory,
+                ),
+              ),
+            )
+          : Text("Init not done!"),
+
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () async {
+          await Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (builder) => StoryViewAddEdit(
                 storyViewModel: widget.viewModel,
-                story: _stories[index],
-                initData: _initData,
-                showAlertDialogDeleteStory: _showAlertDialogDeleteStory,
+                story: null,
               ),
             ),
-          )
-        : Text("Init not done!");
-  }
-
-  Widget _fab() {
-    return FloatingActionButton(
-      child: Icon(Icons.add),
-      onPressed: () async {
-        await Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (builder) =>
-                StoryViewAddEdit(storyViewModel: widget.viewModel, story: null),
-          ),
-        );
-        _initData();
-      },
+          );
+          _initData();
+        },
+      ),
     );
   }
 
