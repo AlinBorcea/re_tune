@@ -23,23 +23,62 @@ class StoryListItem extends StatefulWidget {
 }
 
 class _StoryListItemState extends State<StoryListItem> {
+  final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _startDateController = TextEditingController();
+  final _endDateController = TextEditingController();
+
+  var _editModeOn = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _titleController.text = widget.story.name ?? '';
+    _descriptionController.text = widget.story.description ?? '';
+    _startDateController.text = widget.story.startDate?.toString() ?? '';
+    _endDateController.text = widget.story.endDate?.toString() ?? '';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
       child: Column(
         children: [
           ExpansionTile(
-            title: Text(widget.story.name ?? 'Nothing'),
+            title: _editModeOn
+                ? TextField(controller: _titleController)
+                : Text(_titleController.text),
             leading: Icon(Icons.note),
             children: [
               ListTile(
-                title: Text(
-                  widget.story.description ??
-                      'Description of the story goes here.',
+                title: _editModeOn
+                    ? TextField(controller: _descriptionController)
+                    : Text(_descriptionController.text),
+              ),
+              ListTile(
+                title: Row(
+                  children: [
+                    SizedBox(
+                      width: 150,
+                      child: TextField(
+                        controller: _startDateController,
+                        onTap: () {},
+                      ),
+                    ),
+                    SizedBox(
+                      width: 150,
+                      child: TextField(
+                        controller: _endDateController,
+                        onTap: () {},
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
+
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -62,6 +101,7 @@ class _StoryListItemState extends State<StoryListItem> {
                   );
                 },
               ),
+
               TextButton(
                 child: Row(
                   children: [
@@ -72,24 +112,30 @@ class _StoryListItemState extends State<StoryListItem> {
                 ),
                 onPressed: () => _showAlertDialogDeleteStory(),
               ),
+
               TextButton(
                 child: Row(
                   children: [
-                    Icon(Icons.edit, size: 16, color: Colors.amber),
+                    Icon(
+                      _editModeOn ? Icons.done : Icons.edit,
+                      size: 16,
+                      color: Colors.amber,
+                    ),
                     SizedBox(width: 2),
-                    Text('Edit'),
+                    Text(_editModeOn ? 'Finish' : 'Edit'),
                   ],
                 ),
                 onPressed: () async {
-                  await Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (builder) => StoryViewAddEdit(
-                        storyViewModel: widget.storyViewModel,
-                        story: widget.story,
-                      ),
-                    ),
-                  );
-                  widget.initData();
+                  if (_editModeOn) {
+                    widget.story.name = _titleController.text;
+                    widget.story.description = _descriptionController.text;
+                    widget.storyViewModel.putStory(widget.story);
+                  } else {
+                    debugPrint('Going into edit');
+                  }
+
+                  _editModeOn = !_editModeOn;
+                  setState(() {});
                 },
               ),
             ],
