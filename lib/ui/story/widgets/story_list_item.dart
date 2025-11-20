@@ -70,7 +70,7 @@ class _StoryListItemState extends State<StoryListItem> {
                     Text('Delete'),
                   ],
                 ),
-                onPressed: () => _showAlertDialogDeleteStory(widget.story),
+                onPressed: () => _showAlertDialogDeleteStory(),
               ),
               TextButton(
                 child: Row(
@@ -99,11 +99,11 @@ class _StoryListItemState extends State<StoryListItem> {
     );
   }
 
-  void _showAlertDialogDeleteStory(Story story) {
+  void _showAlertDialogDeleteStory() {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Delete story ${story.name}?'),
+        title: Text('Delete story ${widget.story.name}?'),
         actions: [
           TextButton(
             child: const Text('Cancel'),
@@ -112,7 +112,7 @@ class _StoryListItemState extends State<StoryListItem> {
           TextButton(
             child: const Text('Yes'),
             onPressed: () async {
-              await widget.storyViewModel.deleteStory(story);
+              await widget.storyViewModel.deleteStory(widget.story);
               Navigator.pop(context);
               widget.initData();
             },
