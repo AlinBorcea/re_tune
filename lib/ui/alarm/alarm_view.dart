@@ -20,25 +20,6 @@ class AlarmView extends StatefulWidget {
 }
 
 class _AlarmViewState extends State<AlarmView> {
-  late final List<Widget> _body = [
-    Row(
-      children: [
-        Expanded(
-          child: TextButton(
-            onPressed: () => _removeAlarm(),
-            child: Text('Remove'),
-          ),
-        ),
-        Expanded(
-          child: TextButton(onPressed: () => _addAlarm(), child: Text('Add')),
-        ),
-      ],
-    ),
-  ];
-
-  final List<TextEditingController> _alarmNameControllers = [];
-  final List<TextEditingController> _alarmDateControllers = [];
-  final List<bool> _alarmToggleValues = [];
   late final List<Alarm> _alarms;
   var _initDone = false;
 
@@ -92,15 +73,11 @@ class _AlarmViewState extends State<AlarmView> {
   }
 
   void _removeAlarm() {
-    if (_body.length <= 1) return;
-    _body.removeAt(_body.length - 2);
-    _alarmNameControllers.removeLast();
     _alarms.removeLast();
     setState(() {});
   }
 
   void _addAlarm() {
-    _body.insert(_body.length - 1, _alarmItem());
     _alarms.add(Alarm());
     setState(() {});
   }
@@ -108,12 +85,7 @@ class _AlarmViewState extends State<AlarmView> {
   Widget _alarmItem([String title = '', String date = '']) {
     final titleController = TextEditingController(text: title);
     final dateController = TextEditingController(text: date);
-    var toggleValue = false;
     DateTime? pickedDate;
-
-    _alarmNameControllers.add(dateController);
-    _alarmDateControllers.add(dateController);
-    _alarmToggleValues.add(toggleValue);
 
     return Card(
       child: Row(
