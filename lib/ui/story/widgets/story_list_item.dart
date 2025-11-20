@@ -5,33 +5,37 @@ import 'package:re_tune/ui/story/widgets/story_details.dart';
 
 import '../../../domain/models/story/story.dart';
 
-class StoryListItem extends StatelessWidget {
+class StoryListItem extends StatefulWidget {
   const StoryListItem({
     super.key,
     required this.storyViewModel,
     required this.story,
     required this.initData,
-    required this.showAlertDialogDeleteStory,
   });
 
   final StoryViewModel storyViewModel;
   final Story story;
 
   final Future<void> Function() initData;
-  final void Function(Story story) showAlertDialogDeleteStory;
 
+  @override
+  State<StatefulWidget> createState() => _StoryListItemState();
+}
+
+class _StoryListItemState extends State<StoryListItem> {
   @override
   Widget build(BuildContext context) {
     return Card(
       child: Column(
         children: [
           ExpansionTile(
-            title: Text(story.name ?? 'Nothing'),
+            title: Text(widget.story.name ?? 'Nothing'),
             leading: Icon(Icons.note),
             children: [
               ListTile(
                 title: Text(
-                  story.description ?? 'Description of the story goes here.',
+                  widget.story.description ??
+                      'Description of the story goes here.',
                 ),
               ),
             ],
@@ -51,8 +55,8 @@ class StoryListItem extends StatelessWidget {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (builder) => StoryDetails(
-                        storyViewModel: storyViewModel,
-                        story: story,
+                        storyViewModel: widget.storyViewModel,
+                        story: widget.story,
                       ),
                     ),
                   );
@@ -66,7 +70,7 @@ class StoryListItem extends StatelessWidget {
                     Text('Delete'),
                   ],
                 ),
-                onPressed: () => showAlertDialogDeleteStory(story),
+                onPressed: () => _showAlertDialogDeleteStory(widget.story),
               ),
               TextButton(
                 child: Row(
@@ -80,15 +84,38 @@ class StoryListItem extends StatelessWidget {
                   await Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (builder) => StoryViewAddEdit(
-                        storyViewModel: storyViewModel,
-                        story: story,
+                        storyViewModel: widget.storyViewModel,
+                        story: widget.story,
                       ),
                     ),
                   );
-                  initData();
+                  widget.initData();
                 },
               ),
             ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showAlertDialogDeleteStory(Story story) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Delete story ${story.name}?'),
+        actions: [
+          TextButton(
+            child: const Text('Cancel'),
+            onPressed: () => Navigator.pop(context, 'Cancel'),
+          ),
+          TextButton(
+            child: const Text('Yes'),
+            onPressed: () async {
+              await widget.storyViewModel.deleteStory(story);
+              Navigator.pop(context);
+              widget.initData();
+            },
           ),
         ],
       ),

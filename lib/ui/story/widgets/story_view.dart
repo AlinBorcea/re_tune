@@ -51,7 +51,6 @@ class _StoryViewState extends State<StoryView> {
                   storyViewModel: widget.viewModel,
                   story: _stories[index],
                   initData: _initData,
-                  showAlertDialogDeleteStory: _showAlertDialogDeleteStory,
                 ),
               ),
             )
@@ -70,29 +69,6 @@ class _StoryViewState extends State<StoryView> {
           );
           _initData();
         },
-      ),
-    );
-  }
-
-  void _showAlertDialogDeleteStory(Story story) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Delete story ${story.name}?'),
-        actions: [
-          TextButton(
-            child: const Text('Cancel'),
-            onPressed: () => Navigator.pop(context, 'Cancel'),
-          ),
-          TextButton(
-            child: const Text('Yes'),
-            onPressed: () async {
-              await widget.viewModel.deleteStory(story);
-              Navigator.pop(context);
-              _initData();
-            },
-          ),
-        ],
       ),
     );
   }
