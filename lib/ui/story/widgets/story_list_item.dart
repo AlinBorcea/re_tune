@@ -190,8 +190,8 @@ class _StoryListItemState extends State<StoryListItem> {
           TextButton(
             child: const Text('Yes'),
             onPressed: () async {
-              await widget.storyViewModel.deleteStory(widget.story);
               Navigator.pop(context);
+              await widget.storyViewModel.deleteStory(widget.story);
               widget.initData();
             },
           ),
