@@ -165,6 +165,7 @@ class _AlarmViewState extends State<AlarmView> {
                 titleController.text,
                 pickedDate ?? DateTime.now(),
               ),
+              deleteAlarmCallback: () => _deleteAlarm(),
             ),
           ),
         ],
@@ -180,12 +181,21 @@ class _AlarmViewState extends State<AlarmView> {
 
     widget.alarmViewModel.addAlarm(alarm);
   }
+
+  void _deleteAlarm() {
+    widget.alarmViewModel.deleteAlarm(1);
+  }
 }
 
 class MySwitch extends StatefulWidget {
-  const MySwitch({super.key, required this.saveAlarmCallback});
+  const MySwitch({
+    super.key,
+    required this.saveAlarmCallback,
+    required this.deleteAlarmCallback,
+  });
 
   final Function saveAlarmCallback;
+  final Function deleteAlarmCallback;
 
   @override
   State<StatefulWidget> createState() => MySwitchState();
@@ -204,6 +214,9 @@ class MySwitchState extends State<MySwitch> {
 
       if (on) {
         widget.saveAlarmCallback();
+        return;
+      } else if (!on) {
+        widget.deleteAlarmCallback();
         return;
       }
     },
