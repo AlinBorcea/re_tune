@@ -39,12 +39,55 @@ class _AlarmViewState extends State<AlarmView> {
   final List<TextEditingController> _alarmNameControllers = [];
   final List<TextEditingController> _alarmDateControllers = [];
   final List<bool> _alarmToggleValues = [];
+  late final List<Alarm> _alarms;
+  var _initDone = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initData();
+  }
+
+  void _initData() async {
+    _alarms = await widget.alarmViewModel.getAlarmsOfStory(widget.story.id);
+    _initDone = true;
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Alarms')),
-      body: Column(children: _body),
+      body: _initDone
+          ? ListView.builder(
+              itemCount: _alarms.length + 1,
+              itemBuilder: (context, index) {
+                if (index == _alarms.length) {
+                  return Row(
+                    children: [
+                      Expanded(
+                        child: TextButton(
+                          onPressed: () => _removeAlarm(),
+                          child: Text('Remove'),
+                        ),
+                      ),
+                      Expanded(
+                        child: TextButton(
+                          onPressed: () => _addAlarm(),
+                          child: Text('Add'),
+                        ),
+                      ),
+                    ],
+                  );
+                }
+
+                return _alarmItem(
+                  _alarms[index].name ?? '',
+                  _alarms[index].date?.toString() ?? '',
+                );
+              },
+            )
+          : Text('Init not done'),
     );
   }
 
@@ -52,17 +95,19 @@ class _AlarmViewState extends State<AlarmView> {
     if (_body.length <= 1) return;
     _body.removeAt(_body.length - 2);
     _alarmNameControllers.removeLast();
+    _alarms.removeLast();
     setState(() {});
   }
 
   void _addAlarm() {
     _body.insert(_body.length - 1, _alarmItem());
+    _alarms.add(Alarm());
     setState(() {});
   }
 
-  Widget _alarmItem() {
-    final titleController = TextEditingController();
-    final dateController = TextEditingController();
+  Widget _alarmItem([String title = '', String date = '']) {
+    final titleController = TextEditingController(text: title);
+    final dateController = TextEditingController(text: date);
     var toggleValue = false;
     DateTime? pickedDate;
 
