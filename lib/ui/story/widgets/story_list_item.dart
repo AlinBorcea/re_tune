@@ -1,3 +1,4 @@
+import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 
 import 'package:re_tune/ui/story/view_models/story_view_model.dart';
@@ -31,6 +32,9 @@ class _StoryListItemState extends State<StoryListItem> {
 
   var _editModeOn = false;
 
+  DateTime? _pickedStartDate;
+  DateTime? _pickedEndDate;
+
   @override
   void initState() {
     super.initState();
@@ -63,14 +67,39 @@ class _StoryListItemState extends State<StoryListItem> {
                       width: 150,
                       child: TextField(
                         controller: _startDateController,
-                        onTap: () {},
+                        onTap: () async {
+                          if (!_editModeOn) return;
+
+                          final pickedDate = await showAdaptiveDateTimePicker(
+                            context: context,
+                            mode: DateTimeFieldPickerMode.date,
+                          );
+                          if (pickedDate != null) {
+                            _startDateController.text = pickedDate.toString();
+                            _pickedStartDate = pickedDate;
+                            setState(() {});
+                          }
+                        },
                       ),
                     ),
                     SizedBox(
                       width: 150,
                       child: TextField(
                         controller: _endDateController,
-                        onTap: () {},
+                        onTap: () async {
+                          if (!_editModeOn) return;
+
+                          final pickedDate = await showAdaptiveDateTimePicker(
+                            context: context,
+                            mode: DateTimeFieldPickerMode.date,
+                          );
+
+                          if (pickedDate != null) {
+                            _endDateController.text = pickedDate.toString();
+                            _pickedEndDate = pickedDate;
+                            setState(() {});
+                          }
+                        },
                       ),
                     ),
                   ],
@@ -129,6 +158,9 @@ class _StoryListItemState extends State<StoryListItem> {
                   if (_editModeOn) {
                     widget.story.name = _titleController.text;
                     widget.story.description = _descriptionController.text;
+                    widget.story.startDate = _pickedStartDate;
+                    widget.story.endDate = _pickedEndDate;
+
                     widget.storyViewModel.putStory(widget.story);
                   } else {
                     debugPrint('Going into edit');
