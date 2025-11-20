@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+
 import 'package:re_tune/ui/story/view_models/story_view_model.dart';
-import 'package:re_tune/ui/story/widgets/story_add_edit_view.dart';
+
 import 'package:re_tune/ui/story/widgets/story_details.dart';
 
 import '../../../domain/models/story/story.dart';
@@ -33,7 +34,6 @@ class _StoryListItemState extends State<StoryListItem> {
   @override
   void initState() {
     super.initState();
-
     _titleController.text = widget.story.name ?? '';
     _descriptionController.text = widget.story.description ?? '';
     _startDateController.text = widget.story.startDate?.toString() ?? '';
