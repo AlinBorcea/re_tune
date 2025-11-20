@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:re_tune/ui/story/widgets/story_add_edit_view.dart';
 import 'package:re_tune/ui/story/widgets/story_view_popup_menu.dart';
 import 'package:re_tune/ui/story/widgets/story_list_item.dart';
 
@@ -57,16 +56,9 @@ class _StoryViewState extends State<StoryView> {
 
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () async {
-          await Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (builder) => StoryViewAddEdit(
-                storyViewModel: widget.viewModel,
-                story: null,
-              ),
-            ),
-          );
-          _initData();
+        onPressed: ()  {
+          _stories.add(Story());
+          setState(() {});
         },
       ),
     );
