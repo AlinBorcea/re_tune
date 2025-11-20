@@ -5,8 +5,7 @@ import 'package:re_tune/domain/models/alarm/alarm.dart';
 class AlarmRepositoryIsar implements AlarmRepository {
   final Isar _isar;
 
-  AlarmRepositoryIsar(String path)
-    : _isar = Isar.getInstance()!;
+  AlarmRepositoryIsar(String path) : _isar = Isar.getInstance()!;
 
   @override
   Future<List<Alarm>> getAlarmOfStory(int storyId) =>
@@ -22,6 +21,8 @@ class AlarmRepositoryIsar implements AlarmRepository {
 
   @override
   Future<void> deleteAlarm(int alarmId) async {
-    await _isar.alarms.delete(alarmId);
+    await _isar.writeTxn(() async {
+      await _isar.alarms.delete(alarmId);
+    });
   }
 }
