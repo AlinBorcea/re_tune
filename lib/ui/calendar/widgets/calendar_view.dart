@@ -28,9 +28,13 @@ class _CalendarViewState extends State<CalendarView> {
   }
 
   void _initData() async {
+    final now = DateTime.now();
+    final firstDayOfMonth = DateTime(now.year, now.month, 1);
+    final lastDayOfMonth = DateTime(now.year, now.month+1, 0);
+
     _stories = await widget.calendarViewModel.getByStartDateInRange(
-      DateTime.now().subtract(Duration(days: 3)),
-      DateTime.now().add(Duration(days: 26)),
+      firstDayOfMonth,
+      lastDayOfMonth,
     );
 
     _initDone = true;
