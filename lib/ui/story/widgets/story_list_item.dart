@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:re_tune/ui/story/view_models/story_view_model.dart';
 
 import 'package:re_tune/ui/story/widgets/story_details.dart';
+import 'package:re_tune/utils/utils.dart';
 
 import '../../../domain/models/story/story.dart';
+
+import 'package:intl/intl.dart';
 
 class StoryListItem extends StatefulWidget {
   const StoryListItem({
@@ -40,8 +43,13 @@ class _StoryListItemState extends State<StoryListItem> {
     super.initState();
     _titleController.text = widget.story.name ?? '';
     _descriptionController.text = widget.story.description ?? '';
-    _startDateController.text = widget.story.startDate?.toString() ?? '';
-    _endDateController.text = widget.story.endDate?.toString() ?? '';
+    _startDateController.text = widget.story.startDate != null
+        ? formattedDate(widget.story.startDate!)
+        : '';
+
+    _endDateController.text = widget.story.endDate != null
+        ? formattedDate(widget.story.endDate!)
+        : '';
   }
 
   @override
@@ -75,7 +83,9 @@ class _StoryListItemState extends State<StoryListItem> {
                             mode: DateTimeFieldPickerMode.date,
                           );
                           if (pickedDate != null) {
-                            _startDateController.text = pickedDate.toString();
+                            _startDateController.text = formattedDate(
+                              pickedDate,
+                            );
                             _pickedStartDate = pickedDate;
                             setState(() {});
                           }
@@ -95,7 +105,7 @@ class _StoryListItemState extends State<StoryListItem> {
                           );
 
                           if (pickedDate != null) {
-                            _endDateController.text = pickedDate.toString();
+                            _endDateController.text = formattedDate(pickedDate);
                             _pickedEndDate = pickedDate;
                             setState(() {});
                           }
