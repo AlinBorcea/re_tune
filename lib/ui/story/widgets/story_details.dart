@@ -3,6 +3,7 @@ import 'package:re_tune/domain/models/metric/metric.dart';
 import 'package:re_tune/ui/story/view_models/story_view_model.dart';
 
 import '../../../domain/models/story/story.dart';
+import '../../../utils/utils.dart';
 
 class StoryDetails extends StatefulWidget {
   const StoryDetails({
@@ -359,9 +360,19 @@ class _StoryDetailsState extends State<StoryDetails> {
           Row(children: [Text('Name: '), Text(story.name ?? '')]),
           Row(children: [Text('Description: '), Text(story.description ?? '')]),
           Row(
-            children: [Text('Start Date: '), Text(story.startDate.toString())],
+            children: [
+              Text('Start Date: '),
+              Text(
+                story.startDate != null ? formattedDate(story.startDate!) : '',
+              ),
+            ],
           ),
-          Row(children: [Text('End Date: '), Text(story.endDate.toString())]),
+          Row(
+            children: [
+              Text('End Date: '),
+              Text(story.endDate != null ? formattedDate(story.endDate!) : ''),
+            ],
+          ),
         ],
       ),
     );
