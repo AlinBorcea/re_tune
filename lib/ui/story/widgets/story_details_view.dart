@@ -5,8 +5,8 @@ import 'package:re_tune/ui/story/view_models/story_view_model.dart';
 import '../../../domain/models/story/story.dart';
 import '../../../utils/utils.dart';
 
-class StoryDetails extends StatefulWidget {
-  const StoryDetails({
+class StoryDetailsView extends StatefulWidget {
+  const StoryDetailsView({
     super.key,
     required this.storyViewModel,
     required this.story,
@@ -16,10 +16,10 @@ class StoryDetails extends StatefulWidget {
   final Story story;
 
   @override
-  State<StatefulWidget> createState() => _StoryDetailsState();
+  State<StatefulWidget> createState() => _StoryDetailsViewState();
 }
 
-class _StoryDetailsState extends State<StoryDetails> {
+class _StoryDetailsViewState extends State<StoryDetailsView> {
   final _formKey = GlobalKey<FormState>();
 
   late final int? _metricId;
