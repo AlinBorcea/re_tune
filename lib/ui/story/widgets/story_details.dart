@@ -230,8 +230,15 @@ class _StoryDetailsState extends State<StoryDetails> {
           TextButton(
             onPressed: () {
               _saveMetric();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Saved Details'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
+              Navigator.of(context).pop();
             },
-            child: Text('Save'),
+            child: Text('Save', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
