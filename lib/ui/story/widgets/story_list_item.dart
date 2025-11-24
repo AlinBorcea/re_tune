@@ -162,6 +162,12 @@ class _StoryListItemState extends State<StoryListItem> {
                     widget.story.endDate = _pickedEndDate;
 
                     widget.storyViewModel.putStory(widget.story);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Story ${widget.story.name} Edited!"),
+                        duration: Duration(seconds: 1),
+                      ),
+                    );
                   } else {
                     debugPrint('Going into edit');
                   }
@@ -184,13 +190,16 @@ class _StoryListItemState extends State<StoryListItem> {
         title: Text('Delete story ${widget.story.name}?'),
         actions: [
           TextButton(
-            child: const Text('Cancel'),
-            onPressed: () => Navigator.pop(context, 'Cancel'),
+            child: const Text('No'),
+            onPressed: () => Navigator.pop(context, 'No'),
           ),
           TextButton(
             child: const Text('Yes'),
             onPressed: () async {
               Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Story ${widget.story.name} deleted!')),
+              );
               await widget.storyViewModel.deleteStory(widget.story);
               widget.initData();
             },
