@@ -8,8 +8,6 @@ import 'package:re_tune/utils/utils.dart';
 
 import '../../../domain/models/story/story.dart';
 
-import 'package:intl/intl.dart';
-
 class StoryListItem extends StatefulWidget {
   const StoryListItem({
     super.key,
