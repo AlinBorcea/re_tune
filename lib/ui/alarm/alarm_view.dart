@@ -72,7 +72,8 @@ class _AlarmViewState extends State<AlarmView> {
   }
 
   void _removeAlarm() {
-    _alarms.removeLast();
+    final alarm = _alarms.removeLast();
+    widget.alarmViewModel.deleteAlarm(alarm.id);
     setState(() {});
   }
 
@@ -142,7 +143,10 @@ class _AlarmViewState extends State<AlarmView> {
 
                 _saveAlarm(alarm);
               },
-              deleteAlarmCallback: () => _deleteAlarm(),
+              deleteAlarmCallback: () {
+                alarm.on = false;
+                _saveAlarm(alarm);
+              },
             ),
           ),
         ],
@@ -152,10 +156,6 @@ class _AlarmViewState extends State<AlarmView> {
 
   void _saveAlarm(Alarm alarm) async {
     widget.alarmViewModel.addAlarm(alarm);
-  }
-
-  void _deleteAlarm() {
-    widget.alarmViewModel.deleteAlarm(1);
   }
 }
 
@@ -204,6 +204,12 @@ class MySwitchState extends State<MySwitch> {
         return;
       } else if (!on) {
         widget.deleteAlarmCallback();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Alarm turned off'),
+            duration: Duration(seconds: 1),
+          ),
+        );
         return;
       }
     },
