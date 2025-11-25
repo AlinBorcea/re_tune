@@ -21,7 +21,7 @@ class AlarmView extends StatefulWidget {
 }
 
 class _AlarmViewState extends State<AlarmView> {
-  late final List<Alarm> _alarms;
+  late List<Alarm> _alarms;
   var _initDone = false;
 
   @override
@@ -125,7 +125,9 @@ class _AlarmViewState extends State<AlarmView> {
                           context: context,
                           mode: DateTimeFieldPickerMode.date,
                         );
-                        dateController.text = pickedDate.toString();
+                        dateController.text = pickedDate != null
+                            ? formattedDate(pickedDate!)
+                            : dateController.text;
                       },
                     ),
                   ),
@@ -133,20 +135,36 @@ class _AlarmViewState extends State<AlarmView> {
               ),
             ),
           ),
-          Expanded(
-            child: MySwitch(
-              isOn: alarm.on ?? false,
-              saveAlarmCallback: () {
-                alarm.name = titleController.text;
-                alarm.date = pickedDate ?? alarm.date;
-                alarm.on = true;
+          Flexible(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  child: Row(
+                    children: [
+                      Icon(Icons.delete, color: Colors.red),
+                      Text('Delete'),
+                    ],
+                  ),
+                  onPressed: () {
+                    _deleteAlarm(alarm);
+                  },
+                ),
+                MySwitch(
+                  isOn: alarm.on ?? false,
+                  saveAlarmCallback: () {
+                    alarm.name = titleController.text;
+                    alarm.date = pickedDate ?? alarm.date;
+                    alarm.on = true;
 
-                _saveAlarm(alarm);
-              },
-              deleteAlarmCallback: () {
-                alarm.on = false;
-                _saveAlarm(alarm);
-              },
+                    _saveAlarm(alarm);
+                  },
+                  deleteAlarmCallback: () {
+                    alarm.on = false;
+                    _saveAlarm(alarm);
+                  },
+                ),
+              ],
             ),
           ),
         ],
@@ -156,6 +174,11 @@ class _AlarmViewState extends State<AlarmView> {
 
   void _saveAlarm(Alarm alarm) async {
     widget.alarmViewModel.addAlarm(alarm);
+  }
+
+  void _deleteAlarm(Alarm alarm) async {
+    await widget.alarmViewModel.deleteAlarm(alarm.id);
+    _initData();
   }
 }
 
