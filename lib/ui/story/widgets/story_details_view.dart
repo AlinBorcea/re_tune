@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:re_tune/domain/models/metric/metric.dart';
 import 'package:re_tune/ui/story/view_models/story_view_model.dart';
+import 'package:re_tune/ui/story/widgets/story_metric_list.dart';
 
 import '../../../domain/models/story/story.dart';
 import '../../../utils/utils.dart';
@@ -243,91 +244,138 @@ class _StoryDetailsViewState extends State<StoryDetailsView> {
           ),
         ],
       ),
-      body: Center(
-        child: Column(
-          children: [
-            _storyInfoSection(widget.story),
-            Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Card(
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                controller: _nameController,
-                                decoration: InputDecoration(
-                                  labelText: 'Metric Name',
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(4.0),
-                                    ),
-                                    borderSide: BorderSide(
-                                      color: Colors.black,
-                                      width: 1,
-                                    ),
-                                  ),
-                                ),
-                                validator: (value) => value,
-                              ),
-                            ),
-                            SizedBox(width: 2),
-                            Expanded(
-                              child: TextFormField(
-                                controller: _targetController,
-                                decoration: InputDecoration(
-                                  labelText: 'Target',
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(4.0),
-                                    ),
-                                    borderSide: BorderSide(
-                                      color: Colors.black,
-                                      width: 1,
-                                    ),
-                                  ),
-                                ),
-                                validator: (value) => value,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  Row(
+      body: Column(
+        children: [
+          /// Story section
+          Row(
+            children: [
+              Expanded(
+                child: Card(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      DropdownButton<TimeInterval>(
-                        value: _selectedTimeInterval,
-                        icon: const Icon(Icons.arrow_downward),
-                        elevation: 16,
-                        onChanged: (TimeInterval? value) {
-                          // This is called when the user selects an item.
-                          setState(() {
-                            if (value != null) {
-                              _selectedTimeInterval = value;
-                            }
-                          });
-                        },
-                        items: _timeIntervalValues
-                            .map<DropdownMenuItem<TimeInterval>>((
-                              TimeInterval value,
-                            ) {
-                              return DropdownMenuItem<TimeInterval>(
-                                value: value,
-                                child: Text(_getTimeIntervalValue(value)),
-                              );
-                            })
-                            .toList(),
+                      Text('Name: ${widget.story.name ?? ''}'),
+                      Text('Description: ${widget.story.description ?? ''}'),
+                      Text(
+                        'Start Date: ${widget.story.startDate != null ? formattedDate(widget.story.startDate!) : ''}',
+                      ),
+                      Text(
+                        'End Date: ${widget.story.endDate != null ? formattedDate(widget.story.endDate!) : ''}',
                       ),
                     ],
                   ),
+                ),
+              ),
+            ],
+          ),
 
-                  Row(
+          /// Name and target section
+          Row(
+            children: [
+              Expanded(
+                child: Card(
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: _nameController,
+                          decoration: InputDecoration(
+                            labelText: 'Metric Name',
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(4.0),
+                              ),
+                              borderSide: BorderSide(
+                                color: Colors.black,
+                                width: 1,
+                              ),
+                            ),
+                          ),
+                          validator: (value) => value,
+                        ),
+                      ),
+                      Expanded(
+                        child: TextFormField(
+                          controller: _targetController,
+                          decoration: InputDecoration(
+                            labelText: 'Target',
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(4.0),
+                              ),
+                              borderSide: BorderSide(
+                                color: Colors.black,
+                                width: 1,
+                              ),
+                            ),
+                          ),
+                          validator: (value) => value,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          /// Time interval section
+          Row(
+            children: [
+              DropdownButton<TimeInterval>(
+                value: _selectedTimeInterval,
+                icon: const Icon(Icons.arrow_downward),
+                elevation: 16,
+                onChanged: (TimeInterval? value) {
+                  // This is called when the user selects an item.
+                  setState(() {
+                    if (value != null) {
+                      _selectedTimeInterval = value;
+                    }
+                  });
+                },
+                items: _timeIntervalValues.map<DropdownMenuItem<TimeInterval>>((
+                  TimeInterval value,
+                ) {
+                  return DropdownMenuItem<TimeInterval>(
+                    value: value,
+                    child: Text(_getTimeIntervalValue(value)),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
+
+          /// progress milestone section
+          Row(
+            children: [
+              Expanded(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Card(
+                        child: StoryMetricList(
+                          title: 'sad',
+                          values: ['1', '2', '3'],
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Card(
+                        child: StoryMetricList(
+                          title: 'sad',
+                          values: ['1', '2'],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+
+          /*Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
@@ -343,36 +391,7 @@ class _StoryDetailsViewState extends State<StoryDetailsView> {
                       ),
                     ],
                   ),
-                  Card(child: Column(children: _setbacksFormWidgets)),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _storyInfoSection(Story story) {
-    return Card(
-      child: Column(
-        children: [
-          Row(children: [Text('Name: '), Text(story.name ?? '')]),
-          Row(children: [Text('Description: '), Text(story.description ?? '')]),
-          Row(
-            children: [
-              Text('Start Date: '),
-              Text(
-                story.startDate != null ? formattedDate(story.startDate!) : '',
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              Text('End Date: '),
-              Text(story.endDate != null ? formattedDate(story.endDate!) : ''),
-            ],
-          ),
+                  Card(child: Column(children: _setbacksFormWidgets)),*/
         ],
       ),
     );
