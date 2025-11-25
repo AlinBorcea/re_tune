@@ -11,5 +11,8 @@ class Alarm {
   DateTime? date;
 
   @Index()
+  bool? on;
+
+  @Index()
   int? storyId;
 }

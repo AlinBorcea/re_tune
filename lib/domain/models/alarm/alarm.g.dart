@@ -27,8 +27,13 @@ const AlarmSchema = CollectionSchema(
       name: r'name',
       type: IsarType.string,
     ),
-    r'storyId': PropertySchema(
+    r'on': PropertySchema(
       id: 2,
+      name: r'on',
+      type: IsarType.bool,
+    ),
+    r'storyId': PropertySchema(
+      id: 3,
       name: r'storyId',
       type: IsarType.long,
     )
@@ -39,6 +44,19 @@ const AlarmSchema = CollectionSchema(
   deserializeProp: _alarmDeserializeProp,
   idName: r'id',
   indexes: {
+    r'on': IndexSchema(
+      id: -5089797793274137361,
+      name: r'on',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'on',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    ),
     r'storyId': IndexSchema(
       id: -7904996416186759579,
       name: r'storyId',
@@ -84,7 +102,8 @@ void _alarmSerialize(
 ) {
   writer.writeDateTime(offsets[0], object.date);
   writer.writeString(offsets[1], object.name);
-  writer.writeLong(offsets[2], object.storyId);
+  writer.writeBool(offsets[2], object.on);
+  writer.writeLong(offsets[3], object.storyId);
 }
 
 Alarm _alarmDeserialize(
@@ -97,7 +116,8 @@ Alarm _alarmDeserialize(
   object.date = reader.readDateTimeOrNull(offsets[0]);
   object.id = id;
   object.name = reader.readStringOrNull(offsets[1]);
-  object.storyId = reader.readLongOrNull(offsets[2]);
+  object.on = reader.readBoolOrNull(offsets[2]);
+  object.storyId = reader.readLongOrNull(offsets[3]);
   return object;
 }
 
@@ -113,6 +133,8 @@ P _alarmDeserializeProp<P>(
     case 1:
       return (reader.readStringOrNull(offset)) as P;
     case 2:
+      return (reader.readBoolOrNull(offset)) as P;
+    case 3:
       return (reader.readLongOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -135,6 +157,14 @@ extension AlarmQueryWhereSort on QueryBuilder<Alarm, Alarm, QWhere> {
   QueryBuilder<Alarm, Alarm, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
+    });
+  }
+
+  QueryBuilder<Alarm, Alarm, QAfterWhere> anyOn() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'on'),
+      );
     });
   }
 
@@ -210,6 +240,69 @@ extension AlarmQueryWhere on QueryBuilder<Alarm, Alarm, QWhereClause> {
         upper: upperId,
         includeUpper: includeUpper,
       ));
+    });
+  }
+
+  QueryBuilder<Alarm, Alarm, QAfterWhereClause> onIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'on',
+        value: [null],
+      ));
+    });
+  }
+
+  QueryBuilder<Alarm, Alarm, QAfterWhereClause> onIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'on',
+        lower: [null],
+        includeLower: false,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<Alarm, Alarm, QAfterWhereClause> onEqualTo(bool? on) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'on',
+        value: [on],
+      ));
+    });
+  }
+
+  QueryBuilder<Alarm, Alarm, QAfterWhereClause> onNotEqualTo(bool? on) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'on',
+              lower: [],
+              upper: [on],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'on',
+              lower: [on],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'on',
+              lower: [on],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'on',
+              lower: [],
+              upper: [on],
+              includeUpper: false,
+            ));
+      }
     });
   }
 
@@ -589,6 +682,31 @@ extension AlarmQueryFilter on QueryBuilder<Alarm, Alarm, QFilterCondition> {
     });
   }
 
+  QueryBuilder<Alarm, Alarm, QAfterFilterCondition> onIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'on',
+      ));
+    });
+  }
+
+  QueryBuilder<Alarm, Alarm, QAfterFilterCondition> onIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'on',
+      ));
+    });
+  }
+
+  QueryBuilder<Alarm, Alarm, QAfterFilterCondition> onEqualTo(bool? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'on',
+        value: value,
+      ));
+    });
+  }
+
   QueryBuilder<Alarm, Alarm, QAfterFilterCondition> storyIdIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -687,6 +805,18 @@ extension AlarmQuerySortBy on QueryBuilder<Alarm, Alarm, QSortBy> {
     });
   }
 
+  QueryBuilder<Alarm, Alarm, QAfterSortBy> sortByOn() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'on', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Alarm, Alarm, QAfterSortBy> sortByOnDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'on', Sort.desc);
+    });
+  }
+
   QueryBuilder<Alarm, Alarm, QAfterSortBy> sortByStoryId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'storyId', Sort.asc);
@@ -737,6 +867,18 @@ extension AlarmQuerySortThenBy on QueryBuilder<Alarm, Alarm, QSortThenBy> {
     });
   }
 
+  QueryBuilder<Alarm, Alarm, QAfterSortBy> thenByOn() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'on', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Alarm, Alarm, QAfterSortBy> thenByOnDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'on', Sort.desc);
+    });
+  }
+
   QueryBuilder<Alarm, Alarm, QAfterSortBy> thenByStoryId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'storyId', Sort.asc);
@@ -764,6 +906,12 @@ extension AlarmQueryWhereDistinct on QueryBuilder<Alarm, Alarm, QDistinct> {
     });
   }
 
+  QueryBuilder<Alarm, Alarm, QDistinct> distinctByOn() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'on');
+    });
+  }
+
   QueryBuilder<Alarm, Alarm, QDistinct> distinctByStoryId() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'storyId');
@@ -787,6 +935,12 @@ extension AlarmQueryProperty on QueryBuilder<Alarm, Alarm, QQueryProperty> {
   QueryBuilder<Alarm, String?, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
+    });
+  }
+
+  QueryBuilder<Alarm, bool?, QQueryOperations> onProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'on');
     });
   }
 
