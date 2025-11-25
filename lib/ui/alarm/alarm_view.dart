@@ -4,6 +4,7 @@ import 'package:re_tune/domain/models/alarm/alarm.dart';
 import 'package:re_tune/ui/alarm/alarm_view_model.dart';
 
 import '../../domain/models/story/story.dart';
+import '../../utils/utils.dart';
 
 class AlarmView extends StatefulWidget {
   const AlarmView({
@@ -38,7 +39,7 @@ class _AlarmViewState extends State<AlarmView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Alarms')),
+      appBar: AppBar(title: Text('Alarms of ${widget.story.name}')),
       body: _initDone
           ? ListView.builder(
               itemCount: _alarms.length + 1,
@@ -62,10 +63,8 @@ class _AlarmViewState extends State<AlarmView> {
                   );
                 }
 
-                return _alarmItem(
-                  _alarms[index].name ?? '',
-                  _alarms[index].date?.toString() ?? '',
-                );
+                final alarm = _alarms[index];
+                return _alarmItem(alarm);
               },
             )
           : Text('Init not done'),
@@ -78,13 +77,15 @@ class _AlarmViewState extends State<AlarmView> {
   }
 
   void _addAlarm() {
-    _alarms.add(Alarm());
+    _alarms.add(Alarm()..storyId = widget.story.id);
     setState(() {});
   }
 
-  Widget _alarmItem([String title = '', String date = '']) {
-    final titleController = TextEditingController(text: title);
-    final dateController = TextEditingController(text: date);
+  Widget _alarmItem(Alarm alarm) {
+    final titleController = TextEditingController(text: alarm.name);
+    final dateController = TextEditingController(
+      text: alarm.date != null ? formattedDate(alarm.date!) : '',
+    );
     DateTime? pickedDate;
 
     return Card(
@@ -133,10 +134,14 @@ class _AlarmViewState extends State<AlarmView> {
           ),
           Expanded(
             child: MySwitch(
-              saveAlarmCallback: () => _saveAlarm(
-                titleController.text,
-                pickedDate ?? DateTime.now(),
-              ),
+              isOn: alarm.on ?? false,
+              saveAlarmCallback: () {
+                alarm.name = titleController.text;
+                alarm.date = pickedDate ?? alarm.date;
+                alarm.on = true;
+
+                _saveAlarm(alarm);
+              },
               deleteAlarmCallback: () => _deleteAlarm(),
             ),
           ),
@@ -145,12 +150,7 @@ class _AlarmViewState extends State<AlarmView> {
     );
   }
 
-  void _saveAlarm(String name, DateTime date) async {
-    final alarm = Alarm()
-      ..name = name
-      ..date = date
-      ..storyId = widget.story.id;
-
+  void _saveAlarm(Alarm alarm) async {
     widget.alarmViewModel.addAlarm(alarm);
   }
 
@@ -162,10 +162,12 @@ class _AlarmViewState extends State<AlarmView> {
 class MySwitch extends StatefulWidget {
   const MySwitch({
     super.key,
+    required this.isOn,
     required this.saveAlarmCallback,
     required this.deleteAlarmCallback,
   });
 
+  final bool isOn;
   final Function saveAlarmCallback;
   final Function deleteAlarmCallback;
 
@@ -177,6 +179,13 @@ class MySwitchState extends State<MySwitch> {
   var toggleValue = false;
 
   @override
+  void initState() {
+    super.initState();
+    toggleValue = widget.isOn;
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) => Switch(
     value: toggleValue,
     onChanged: (bool on) {
@@ -186,6 +195,12 @@ class MySwitchState extends State<MySwitch> {
 
       if (on) {
         widget.saveAlarmCallback();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Alarm turned on'),
+            duration: Duration(seconds: 1),
+          ),
+        );
         return;
       } else if (!on) {
         widget.deleteAlarmCallback();
