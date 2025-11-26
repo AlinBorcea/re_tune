@@ -1,32 +1,49 @@
 import 'package:flutter/material.dart';
 
 class StoryMetricList extends StatefulWidget {
-  const StoryMetricList({super.key, required this.title, required this.values});
+  const StoryMetricList({
+    super.key,
+    required this.title,
+    required this.controllers,
+  });
 
   final String title;
-  final List<String> values;
+  final List<TextEditingController> controllers;
 
   @override
   State<StatefulWidget> createState() => _StoryMetricListState();
 }
 
 class _StoryMetricListState extends State<StoryMetricList> {
-  late List<String> _values;
-
-  @override
-  void initState() {
-    super.initState();
-    _values = widget.values;
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       shrinkWrap: true,
-      itemCount: widget.values.length,
+      itemCount: widget.controllers.length + 2,
       itemBuilder: (context, index) {
-        return Text('Item $index');
+        if (index == 0) return Text(widget.title);
+        if (index == widget.controllers.length + 1) {
+          return Row(
+            children: [
+              IconButton(
+                onPressed: () {
+                  widget.controllers.removeLast();
+                  setState(() {});
+                },
+                icon: Icon(Icons.minimize),
+              ),
+              IconButton(
+                onPressed: () {
+                  widget.controllers.add(TextEditingController());
+                  setState(() {});
+                },
+                icon: Icon(Icons.add),
+              ),
+            ],
+          );
+        }
+
+        return TextField(controller: widget.controllers[index-1]);
       },
     );
   }

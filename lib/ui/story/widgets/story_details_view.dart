@@ -21,9 +21,13 @@ class StoryDetailsView extends StatefulWidget {
 }
 
 class _StoryDetailsViewState extends State<StoryDetailsView> {
-  late final int? _metricId;
   final _nameController = TextEditingController();
   final _targetController = TextEditingController();
+
+  final List<TextEditingController> _progressControllers = [];
+  final List<TextEditingController> _milestoneControllers = [];
+  final List<TextEditingController> _setbackControllers = [];
+
   final _timeIntervalValues = [
     TimeInterval.daily,
     TimeInterval.weekly,
@@ -31,194 +35,9 @@ class _StoryDetailsViewState extends State<StoryDetailsView> {
   ];
   var _selectedTimeInterval = TimeInterval.daily;
 
-  final List<TextEditingController> _progressControllers = [
-    TextEditingController(),
-  ];
-  final List<TextEditingController> _milestoneControllers = [
-    TextEditingController(),
-  ];
-  final List<TextEditingController> _setbackControllers = [
-    TextEditingController(),
-  ];
-
-  late final List<Widget> _progressFormWidgets = [
-    TextFormField(
-      controller: _progressControllers[0],
-      decoration: InputDecoration(
-        labelText: 'Progress made',
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(4.0)),
-          borderSide: BorderSide(color: Colors.black, width: 1),
-        ),
-      ),
-      validator: (value) => value,
-    ),
-    Row(
-      children: [
-        IconButton(
-          icon: Icon(Icons.remove, color: Colors.red),
-          onPressed: () {
-            setState(() {
-              _removeTextFormFieldInWidgetList(
-                _progressFormWidgets,
-                _progressControllers,
-              );
-            });
-          },
-        ),
-        IconButton(
-          icon: Icon(Icons.add),
-          onPressed: () {
-            setState(() {
-              _insertTextFormFieldInWidgetList(
-                _progressFormWidgets,
-                _progressControllers,
-              );
-            });
-          },
-        ),
-      ],
-    ),
-  ];
-
-  late final List<Widget> _milestoneFormWidgets = [
-    TextFormField(
-      controller: _milestoneControllers[0],
-      decoration: InputDecoration(
-        labelText: 'Milestones',
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(4.0)),
-          borderSide: BorderSide(color: Colors.black, width: 1),
-        ),
-      ),
-      validator: (value) => value,
-    ),
-    Row(
-      children: [
-        IconButton(
-          icon: Icon(Icons.remove, color: Colors.red),
-          onPressed: () {
-            setState(() {
-              _removeTextFormFieldInWidgetList(
-                _milestoneFormWidgets,
-                _milestoneControllers,
-              );
-            });
-          },
-        ),
-        IconButton(
-          icon: Icon(Icons.add),
-          onPressed: () {
-            setState(() {
-              _insertTextFormFieldInWidgetList(
-                _milestoneFormWidgets,
-                _milestoneControllers,
-              );
-            });
-          },
-        ),
-      ],
-    ),
-  ];
-  late final List<Widget> _setbacksFormWidgets = [
-    TextFormField(
-      controller: _setbackControllers[0],
-      decoration: InputDecoration(
-        labelText: 'Setbacks',
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(4.0)),
-          borderSide: BorderSide(color: Colors.black, width: 1),
-        ),
-      ),
-      validator: (value) => value,
-    ),
-    Row(
-      children: [
-        IconButton(
-          icon: Icon(Icons.remove, color: Colors.red),
-          onPressed: () {
-            setState(() {
-              _removeTextFormFieldInWidgetList(
-                _setbacksFormWidgets,
-                _setbackControllers,
-              );
-            });
-          },
-        ),
-        IconButton(
-          icon: Icon(Icons.add),
-          onPressed: () {
-            setState(() {
-              _insertTextFormFieldInWidgetList(
-                _setbacksFormWidgets,
-                _setbackControllers,
-              );
-            });
-          },
-        ),
-      ],
-    ),
-  ];
-
   @override
   void initState() {
     super.initState();
-    _initMetricData();
-  }
-
-  void _initMetricData() async {
-    final metricsList = await widget.storyViewModel.getMetricsOfStory(
-      widget.story.id,
-    );
-
-    if (metricsList.isEmpty) return;
-
-    final metric = metricsList[0];
-
-    _metricId = metric.id;
-    _nameController.text = metric.name ?? '';
-    _targetController.text = metric.target ?? '';
-
-    if (metric.progressValues != null && metric.progressValues!.isNotEmpty) {
-      _progressFormWidgets.removeAt(0);
-      _progressControllers.removeAt(0);
-      for (final progress in metric.progressValues!) {
-        final controller = TextEditingController()..text = progress;
-        _progressFormWidgets.insert(
-          _progressFormWidgets.length - 1,
-          TextFormField(controller: controller, validator: (value) => value),
-        );
-        _progressControllers.add(controller);
-      }
-    }
-
-    if (metric.milestoneNames != null && metric.milestoneNames!.isNotEmpty) {
-      _milestoneFormWidgets.removeAt(0);
-      _milestoneControllers.removeAt(0);
-      for (final milestone in metric.milestoneNames!) {
-        final controller = TextEditingController()..text = milestone;
-        _milestoneFormWidgets.insert(
-          _milestoneFormWidgets.length - 1,
-          TextFormField(controller: controller, validator: (value) => value),
-        );
-        _milestoneControllers.add(controller);
-      }
-    }
-
-    if (metric.setbackNames != null && metric.setbackNames!.isNotEmpty) {
-      _setbacksFormWidgets.removeAt(0);
-      _setbackControllers.removeAt(0);
-      for (final setback in metric.setbackNames!) {
-        final controller = TextEditingController()..text = setback;
-        _setbacksFormWidgets.insert(
-          _setbacksFormWidgets.length - 1,
-          TextFormField(controller: controller, validator: (value) => value),
-        );
-        _setbackControllers.add(controller);
-      }
-    }
-
-    setState(() {});
   }
 
   @override
@@ -229,7 +48,7 @@ class _StoryDetailsViewState extends State<StoryDetailsView> {
         actions: [
           TextButton(
             onPressed: () {
-              _saveMetric();
+              //_saveMetric();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text('Saved Details'),
@@ -354,16 +173,16 @@ class _StoryDetailsViewState extends State<StoryDetailsView> {
                     Expanded(
                       child: Card(
                         child: StoryMetricList(
-                          title: 'sad',
-                          values: ['1', '2', '3'],
+                          title: 'Progress',
+                          controllers: _progressControllers,
                         ),
                       ),
                     ),
                     Expanded(
                       child: Card(
                         child: StoryMetricList(
-                          title: 'sad',
-                          values: ['1', '2'],
+                          title: 'Milestones',
+                          controllers: _milestoneControllers,
                         ),
                       ),
                     ),
@@ -373,86 +192,22 @@ class _StoryDetailsViewState extends State<StoryDetailsView> {
             ],
           ),
 
-          /*Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Card(
-                          child: Column(children: _progressFormWidgets),
-                        ),
-                      ),
-                      SizedBox(width: 2),
-                      Expanded(
-                        child: Card(
-                          child: Column(children: _milestoneFormWidgets),
-                        ),
-                      ),
-                    ],
+          Row(
+            children: [
+              Expanded(
+                child: Card(
+                  child: StoryMetricList(
+                    title: 'Setbacks',
+                    controllers: _setbackControllers,
                   ),
-                  Card(child: Column(children: _setbacksFormWidgets)),*/
+                ),
+              ),
+              Expanded(child: SizedBox()),
+            ],
+          ),
         ],
       ),
     );
-  }
-
-  void _saveMetric() {
-    final metric = Metric()
-      ..name = _nameController.text
-      ..target = _targetController.text
-      ..progressTimeInterval = _selectedTimeInterval
-      ..progressValues = List.generate(
-        _progressControllers.length,
-        (index) => _progressControllers[index].text,
-      )
-      ..progressDone = List.generate(
-        _progressControllers.length,
-        (index) => false,
-      )
-      ..milestoneNames = List.generate(
-        _milestoneControllers.length,
-        (index) => _milestoneControllers[index].text,
-      )
-      ..milestonesDone = List.generate(
-        _milestoneControllers.length,
-        (index) => false,
-      )
-      ..setbackNames = List.generate(
-        _setbackControllers.length,
-        (index) => _setbackControllers[index].text,
-      )
-      ..storyId = widget.story.id;
-
-    if (_metricId != null) metric.id = _metricId;
-    widget.storyViewModel.pushMetric(metric);
-  }
-
-  void _insertTextFormFieldInWidgetList(
-    List<Widget> formList,
-    List<TextEditingController> controllers,
-  ) {
-    controllers.add(TextEditingController());
-    formList.insert(
-      formList.length - 1,
-      TextFormField(
-        controller: controllers.last,
-        validator: (value) => value,
-        decoration: InputDecoration(
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(4.0)),
-            borderSide: BorderSide(color: Colors.black, width: 1),
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _removeTextFormFieldInWidgetList(
-    List<Widget> formList,
-    List<TextEditingController> controllers,
-  ) {
-    if (formList.length <= 2) return;
-    controllers.removeLast();
-    formList.removeAt(formList.length - 2);
   }
 
   String _getTimeIntervalValue(TimeInterval interval) {
