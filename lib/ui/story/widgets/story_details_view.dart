@@ -21,8 +21,6 @@ class StoryDetailsView extends StatefulWidget {
 }
 
 class _StoryDetailsViewState extends State<StoryDetailsView> {
-  final _formKey = GlobalKey<FormState>();
-
   late final int? _metricId;
   final _nameController = TextEditingController();
   final _targetController = TextEditingController();
