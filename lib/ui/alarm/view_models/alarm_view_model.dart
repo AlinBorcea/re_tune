@@ -1,6 +1,6 @@
 import 'package:re_tune/data/repositories/alarm/alarm_repository.dart';
 
-import '../../domain/models/alarm/alarm.dart';
+import '../../../domain/models/alarm/alarm.dart';
 
 class AlarmViewModel {
   final AlarmRepository alarmRepository;

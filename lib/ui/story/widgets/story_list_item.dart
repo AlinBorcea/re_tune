@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:re_tune/ui/story/view_models/story_view_model.dart';
 
-import 'package:re_tune/ui/story/widgets/story_details_view.dart';
+import 'package:re_tune/ui/story/views/story_details_view.dart';
 import 'package:re_tune/utils/utils.dart';
 
 import '../../../domain/models/story/story.dart';

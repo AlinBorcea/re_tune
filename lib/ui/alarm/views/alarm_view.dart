@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:re_tune/domain/models/alarm/alarm.dart';
-import 'package:re_tune/ui/alarm/alarm_item.dart';
-import 'package:re_tune/ui/alarm/alarm_view_model.dart';
+import 'package:re_tune/ui/alarm/widgets/alarm_item.dart';
+import 'package:re_tune/ui/alarm/view_models/alarm_view_model.dart';
 
-import '../../domain/models/story/story.dart';
+import '../../../domain/models/story/story.dart';
 
 class AlarmView extends StatefulWidget {
   const AlarmView({

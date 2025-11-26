@@ -6,8 +6,8 @@ import 'package:re_tune/ui/calendar/view_models/calendar_view_model.dart';
 import 'package:re_tune/ui/calendar/widgets/calendar_header.dart';
 
 import '../../../data/repositories/alarm/alarm_repository_isar.dart';
-import '../../alarm/alarm_view.dart';
-import '../../alarm/alarm_view_model.dart';
+import '../../alarm/views/alarm_view.dart';
+import '../../alarm/view_models/alarm_view_model.dart';
 
 class CalendarContent extends StatefulWidget {
   const CalendarContent({

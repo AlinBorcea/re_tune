@@ -1,9 +1,9 @@
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
-import 'package:re_tune/ui/alarm/alarm_switch.dart';
 import 'package:re_tune/utils/utils.dart';
 
-import '../../domain/models/alarm/alarm.dart';
+import '../../../domain/models/alarm/alarm.dart';
+import 'alarm_switch.dart';
 
 class AlarmItem extends StatefulWidget {
   const AlarmItem({
