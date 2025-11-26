@@ -12,6 +12,12 @@ class AlarmRepositoryIsar implements AlarmRepository {
       _isar.alarms.where().storyIdEqualTo(storyId).findAll();
 
   @override
+  Future<List<Alarm>> getTodaysAlarms() async {
+    final today = DateTime.now();
+    return await _isar.alarms.where().dateEqualTo(today).findAll();
+  }
+
+  @override
   Future<void> setAlarm(Alarm alarm) async {
     await _isar.writeTxn(() async {
       await _isar.alarms.put(alarm);

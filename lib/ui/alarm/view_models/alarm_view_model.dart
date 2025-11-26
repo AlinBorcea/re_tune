@@ -10,6 +10,9 @@ class AlarmViewModel {
   Future<List<Alarm>> getAlarmsOfStory(int storyId) async =>
       await alarmRepository.getAlarmOfStory(storyId);
 
+  Future<List<Alarm>> getTodaysAlarms() async =>
+      await alarmRepository.getTodaysAlarms();
+
   Future<void> addAlarm(Alarm alarm) async {
     await alarmRepository.setAlarm(alarm);
   }
