@@ -8,6 +8,7 @@ class Alarm {
 
   String? name;
 
+  @Index()
   DateTime? date;
 
   @Index()
