@@ -24,9 +24,9 @@ class _StoryDetailsViewState extends State<StoryDetailsView> {
   final _nameController = TextEditingController();
   final _targetController = TextEditingController();
 
-  final List<TextEditingController> _progressControllers = [];
-  final List<TextEditingController> _milestoneControllers = [];
-  final List<TextEditingController> _setbackControllers = [];
+  late List<TextEditingController> _progressControllers;
+  late List<TextEditingController> _milestoneControllers;
+  late List<TextEditingController> _setbackControllers;
 
   final _timeIntervalValues = [
     TimeInterval.daily,
@@ -35,20 +35,63 @@ class _StoryDetailsViewState extends State<StoryDetailsView> {
   ];
   var _selectedTimeInterval = TimeInterval.daily;
 
+  late final Metric _metric;
+  bool _initDone = false;
+
   @override
   void initState() {
     super.initState();
+    _initMetric();
+  }
+
+  Future<void> _initMetric() async {
+    final metricsOfStory = await widget.storyViewModel.getMetricsOfStory(
+      widget.story.id,
+    );
+
+    _metric = metricsOfStory.firstOrNull ?? Metric();
+    _nameController.text = _metric.name ?? '';
+    _targetController.text = _metric.target ?? '';
+
+    _progressControllers = _metric.progressValues == null
+        ? []
+        : List.generate(
+            _metric.progressValues!.length,
+            (index) =>
+                TextEditingController(text: _metric.progressValues![index]),
+          );
+
+    _milestoneControllers = _metric.milestoneNames == null
+        ? []
+        : List.generate(
+            _metric.milestoneNames!.length,
+            (index) =>
+                TextEditingController(text: _metric.milestoneNames![index]),
+          );
+
+    _setbackControllers = _metric.setbackNames == null
+        ? []
+        : List.generate(
+            _metric.setbackNames!.length,
+            (index) =>
+                TextEditingController(text: _metric.setbackNames![index]),
+          );
+
+    _initDone = true;
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
+    if (!_initDone) return Text('Loading...');
+
     return Scaffold(
       appBar: AppBar(
         title: Text('${widget.story.name}'),
         actions: [
           TextButton(
             onPressed: () {
-              //_saveMetric();
+              _saveMetrics();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text('Saved Details'),
@@ -208,6 +251,30 @@ class _StoryDetailsViewState extends State<StoryDetailsView> {
         ],
       ),
     );
+  }
+
+  void _saveMetrics() {
+    _metric.name = _nameController.text;
+    _metric.target = _targetController.text;
+    _metric.progressTimeInterval = _selectedTimeInterval;
+    _metric.storyId = widget.story.id;
+
+    _metric.progressValues = List.generate(
+      _progressControllers.length,
+      (index) => _progressControllers[index].text,
+    );
+
+    _metric.milestoneNames = List.generate(
+      _milestoneControllers.length,
+      (index) => _milestoneControllers[index].text,
+    );
+
+    _metric.setbackNames = List.generate(
+      _setbackControllers.length,
+      (index) => _setbackControllers[index].text,
+    );
+
+    widget.storyViewModel.pushMetric(_metric);
   }
 
   String _getTimeIntervalValue(TimeInterval interval) {
